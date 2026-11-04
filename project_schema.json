@@ -1,0 +1,1470 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "genres": {
+          "type": "string"
+        },
+        "expectedLengthMin": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "logline": {
+          "type": "string"
+        },
+        "synopsis": {
+          "type": "string"
+        },
+        "directingStyle": {
+          "type": "string"
+        },
+        "cinematographyStyle": {
+          "type": "string"
+        },
+        "editingStyle": {
+          "type": "string"
+        },
+        "languages": {
+          "type": "string"
+        },
+        "aspectRatio": {
+          "type": "string"
+        },
+        "frameRate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stylePrefix": {
+          "type": "string"
+        },
+        "styleSuffix": {
+          "type": "string"
+        },
+        "styleNegative": {
+          "type": "string"
+        },
+        "skillIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "glossary": {
+          "type": "string"
+        },
+        "thumbnail": {
+          "type": "string"
+        },
+        "bannerImage": {
+          "type": "string"
+        },
+        "bannerPosition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "thumbView": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "zoom": {
+              "type": "number"
+            },
+            "fit": {
+              "type": "string",
+              "enum": [
+                "cover",
+                "contain"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "script": {
+      "type": "string"
+    },
+    "scriptElements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "sceneNumber": {
+            "type": "string"
+          },
+          "alignment": {
+            "type": "string"
+          },
+          "startsNewPage": {
+            "type": "boolean"
+          },
+          "dualGroup": {
+            "type": "string"
+          },
+          "dual": {
+            "type": "boolean"
+          },
+          "runs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "text"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "bold": {
+                  "type": "boolean"
+                },
+                "italic": {
+                  "type": "boolean"
+                },
+                "underline": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "scriptSource": {
+      "type": "string"
+    },
+    "scriptVersions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "createdAt",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "text"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "sceneNumber": {
+                  "type": "string"
+                },
+                "alignment": {
+                  "type": "string"
+                },
+                "startsNewPage": {
+                  "type": "boolean"
+                },
+                "dualGroup": {
+                  "type": "string"
+                },
+                "dual": {
+                  "type": "boolean"
+                },
+                "runs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "text"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "bold": {
+                        "type": "boolean"
+                      },
+                      "italic": {
+                        "type": "boolean"
+                      },
+                      "underline": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sceneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "prompted",
+              "generated",
+              "approved"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "angles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "aliases": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "look": {
+            "type": "string"
+          },
+          "personality": {
+            "type": "string"
+          },
+          "arc": {
+            "type": "string"
+          },
+          "seed": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sceneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "prompted",
+              "generated",
+              "approved"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "intExt": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "mood": {
+            "type": "string"
+          },
+          "palette": {
+            "type": "string"
+          },
+          "angles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sceneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "prompted",
+              "generated",
+              "approved"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "angles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "material": {
+            "type": "string"
+          },
+          "significance": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "costumes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sceneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "prompted",
+              "generated",
+              "approved"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "angles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "characterId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "number",
+          "slug"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "number": {
+            "type": "number"
+          },
+          "heroImage": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shotId",
+                  "versionId"
+                ],
+                "properties": {
+                  "shotId": {
+                    "type": "string"
+                  },
+                  "versionId": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "heroVideo": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shotId",
+                  "versionId"
+                ],
+                "properties": {
+                  "shotId": {
+                    "type": "string"
+                  },
+                  "versionId": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scriptNumber": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "intExt": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "mood": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high"
+            ]
+          },
+          "productionStage": {
+            "type": "string"
+          },
+          "productionNotes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "sceneId",
+          "order"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "sceneId": {
+            "type": "string"
+          },
+          "angleSelections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "assetId",
+                "angleId"
+              ],
+              "properties": {
+                "assetId": {
+                  "type": "string"
+                },
+                "angleId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "order": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "angle": {
+            "type": "string"
+          },
+          "movement": {
+            "type": "string"
+          },
+          "lens": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "action": {
+            "type": "string"
+          },
+          "dialogue": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "character",
+                "line"
+              ],
+              "properties": {
+                "character": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "string"
+                },
+                "lang": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "te"
+                  ]
+                }
+              }
+            }
+          },
+          "characterIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "environmentAngleId": {
+            "type": "string"
+          },
+          "propIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "costumeIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lighting": {
+            "type": "string"
+          },
+          "colorPalette": {
+            "type": "string"
+          },
+          "imagePrompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "videoPrompt": {
+            "type": "string"
+          },
+          "transition": {
+            "type": "string"
+          },
+          "soundCue": {
+            "type": "string"
+          },
+          "image": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "url"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "approvedId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "video": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "url"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "approvedId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "prompted",
+              "image",
+              "image_approved",
+              "video",
+              "video_approved",
+              "locked"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "lockedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "archivedScenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "number",
+          "slug"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "number": {
+            "type": "number"
+          },
+          "heroImage": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shotId",
+                  "versionId"
+                ],
+                "properties": {
+                  "shotId": {
+                    "type": "string"
+                  },
+                  "versionId": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "heroVideo": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shotId",
+                  "versionId"
+                ],
+                "properties": {
+                  "shotId": {
+                    "type": "string"
+                  },
+                  "versionId": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scriptNumber": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "intExt": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "mood": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high"
+            ]
+          },
+          "productionStage": {
+            "type": "string"
+          },
+          "productionNotes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "archivedShots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "sceneId",
+          "order"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "sceneId": {
+            "type": "string"
+          },
+          "angleSelections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "assetId",
+                "angleId"
+              ],
+              "properties": {
+                "assetId": {
+                  "type": "string"
+                },
+                "angleId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "order": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "angle": {
+            "type": "string"
+          },
+          "movement": {
+            "type": "string"
+          },
+          "lens": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "action": {
+            "type": "string"
+          },
+          "dialogue": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "character",
+                "line"
+              ],
+              "properties": {
+                "character": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "string"
+                },
+                "lang": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "te"
+                  ]
+                }
+              }
+            }
+          },
+          "characterIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "environmentAngleId": {
+            "type": "string"
+          },
+          "propIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "costumeIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lighting": {
+            "type": "string"
+          },
+          "colorPalette": {
+            "type": "string"
+          },
+          "imagePrompt": {
+            "type": "string"
+          },
+          "negativePrompt": {
+            "type": "string"
+          },
+          "videoPrompt": {
+            "type": "string"
+          },
+          "transition": {
+            "type": "string"
+          },
+          "soundCue": {
+            "type": "string"
+          },
+          "image": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "url"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "approvedId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "video": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "url"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "approvedId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "prompted",
+              "image",
+              "image_approved",
+              "video",
+              "video_approved",
+              "locked"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "lockedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "direction",
+              "cinematography",
+              "editing",
+              "color",
+              "sound",
+              "custom"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASTRA Studio complete project",
+  "description": "Native schemaVersion 1 project file. Cross-reference integrity and runtime are checked by ASTRA on import; see llm_instruction_prompt.md."
+}
