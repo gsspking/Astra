@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <TitlePage><Content><Paragraph Type="General"><Text>NOT SCREENPLAY CONTENT</Text></Paragraph></Content></TitlePage>
+  <Content>
+    <Paragraph Type="Transition"><Text>FADE IN:</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="1"><Text Style="Bold">INT. TEA STALL - NIGHT</Text></Paragraph>
+    <Paragraph Type="Action"><Text>Rain drums on the roof. Meera places a red umbrella beside the counter.</Text></Paragraph>
+    <Paragraph Type="Character"><Text>MEERA</Text></Paragraph>
+    <Paragraph Type="Parenthetical"><Text>(quietly)</Text></Paragraph>
+    <Paragraph Type="Dialogue"><Text>One tea, </Text><Text Style="Italic">please.</Text></Paragraph>
+    <Paragraph Type="Transition"><Text>CUT TO:</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="1A"><Text>INT. TEA STALL - NIGHT</Text></Paragraph>
+    <Paragraph Type="Action"><Text>Ravi finds the old cup.</Text></Paragraph>
+    <Paragraph Type="Character"><Text>RAVI (O.S.)</Text></Paragraph>
+    <Paragraph Type="Dialogue"><Text>ఇంకా వేచి ఉన్నాను.</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="1B"><Text>EXT. STREET - NIGHT</Text></Paragraph>
+    <Paragraph Type="Action"><Text>A bus passes.</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="2"><Text>INT. BUS - NIGHT</Text></Paragraph>
+    <Paragraph Type="Action"><Text>Meera takes a window seat.</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="3"><Text>EXT. STATION - DAWN</Text></Paragraph>
+    <DualDialogue>
+      <Paragraph Type="Character"><Text>RAVI</Text></Paragraph>
+      <Paragraph Type="Dialogue"><Text>Wait!</Text></Paragraph>
+      <Paragraph Type="Character"><Text>MEERA</Text></Paragraph>
+      <Paragraph Type="Dialogue"><Text>You are late.</Text></Paragraph>
+    </DualDialogue>
+    <Paragraph Type="Scene Heading" Number="4"><Text>INT. TRAIN - DAWN</Text></Paragraph>
+    <Paragraph Type="Action"><Text>The carriage is empty.</Text></Paragraph>
+    <Paragraph Type="Scene Heading" Number="4A"><Text>EXT. PLATFORM - DAWN</Text></Paragraph>
+    <Paragraph Type="Action"><Text>The red umbrella opens.</Text></Paragraph>
+    <Paragraph Type="Scene Heading"><SceneProperties Number="4B"/><Text>INT. TEA STALL - MORNING</Text></Paragraph>
+    <Paragraph Type="Action"><Text>A fresh cup waits on the counter.</Text></Paragraph>
+    <Paragraph Type="Transition"><Text>FADE OUT.</Text></Paragraph>
+  </Content>
+</FinalDraft>

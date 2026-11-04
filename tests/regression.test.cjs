@@ -11,7 +11,7 @@ let server,browser,base;
 const image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=';
 before(async()=>{
   // Test-only hooks are appended to the served module, never the shipping file.
-  const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,qc,Uc,Go,Wo,dl,nu,tu,F_,L_,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
+  const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,tl,qc,Uc,Go,Wo,dl,nu,tu,F_,L_,asImportFdx,asSceneLabel,asSyncScriptNumbers,asBreakupPlan,asBreakupExport,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
   server=http.createServer((req,res)=>{res.setHeader('content-type','text/html');res.end(html)});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   base=`http://127.0.0.1:${server.address().port}/index.html`;
@@ -33,6 +33,116 @@ function mediaDuration(file){
   const packets=JSON.parse(execFileSync('ffprobe',['-v','error','-show_packets','-show_entries','packet=pts_time,duration_time','-of','json',file],{encoding:'utf8',maxBuffer:10*1024*1024})).packets;
   return Math.max(...packets.map(p=>Number(p.pts_time||0)+Number(p.duration_time||0)));
 }
+const scriptLabels=['1','1A','1B','2','3','4','4A','4B'];
+async function importNumberedScript(page){
+  await page.evaluate(()=>window.__astra.nu({title:'Numbered screenplay'}));
+  await page.goto(base+'#/script');
+  await page.getByRole('complementary',{name:'Script scenes and versions'}).waitFor();
+  await page.locator('main input[type=file]').setInputFiles(path.join(__dirname,'fixtures','numbered-screenplay.fdx'));
+  await page.waitForFunction(()=>document.body.innerText.includes('Raw Scene Count: 8'));
+}
+
+test('FDX imports as a professionally aligned screenplay with original scene labels and rich text',async t=>{
+  const page=await session(t);await importNumberedScript(page);
+  const script=page.getByRole('article',{name:'Formatted screenplay'});
+  assert.deepEqual(await script.locator('[data-script-scene]').evaluateAll(nodes=>nodes.map(n=>n.dataset.scriptScene)),scriptLabels);
+  assert.doesNotMatch(await script.innerText(),/NOT SCREENPLAY CONTENT/);
+  assert.equal(await script.getByText('CUT TO:',{exact:true}).count(),1);
+  assert.equal(await script.getByText('FADE OUT.',{exact:true}).count(),1);
+  assert.equal(await script.locator('.astra-screenplay-dual > div').count(),2);
+  assert.equal(await script.getByText('please.',{exact:true}).evaluate(node=>getComputedStyle(node).fontStyle),'italic');
+  const action=await script.locator('.astra-screenplay-action').first().boundingBox(),cue=await script.locator('.astra-screenplay-character').first().boundingBox(),dialogue=await script.locator('.astra-screenplay-dialogue').first().boundingBox(),parenthetical=await script.locator('.astra-screenplay-parenthetical').first().boundingBox();
+  assert.ok(action.x<dialogue.x&&dialogue.x<parenthetical.x&&parenthetical.x<cue.x,'industry-style dialogue and parenthetical indents');
+  assert.equal(await script.getByText('CUT TO:',{exact:true}).evaluate(node=>getComputedStyle(node).textAlign),'right');
+  assert.match(await page.getByRole('complementary',{name:'Script scenes and versions'}).innerText(),/Script scene 1A\nRaw scene 2/);
+  await page.getByRole('button',{name:'Save version',exact:true}).click();
+  await page.getByRole('button',{name:'Edit source',exact:true}).click();await page.getByRole('textbox',{name:'Screenplay source'}).fill('INT. ALTERED - DAY #9#\n\nAltered.');
+  await page.getByRole('button',{name:'restore',exact:true}).click();await page.getByRole('button',{name:'Screenplay',exact:true}).click();
+  assert.equal(await script.getByText('please.',{exact:true}).evaluate(node=>getComputedStyle(node).fontStyle),'italic');
+  await page.evaluate(()=>window.__astra.Ul());await page.reload();await page.waitForFunction(()=>window.__astra?.G.getState().hydrated);
+  assert.deepEqual(await script.locator('[data-script-scene]').evaluateAll(nodes=>nodes.map(n=>n.dataset.scriptScene)),scriptLabels);
+  await page.screenshot({path:path.join(root,'test-results','screenplay-preview.png'),fullPage:true});
+});
+
+test('breakdown and shot exports preserve 1A/1B labels independently from numeric raw counts',async t=>{
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();
+  await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  const project=await page.evaluate(()=>window.__astra.G.getState().project);
+  assert.deepEqual(project.scenes.map(s=>s.scriptNumber),scriptLabels);assert.deepEqual(project.scenes.map(s=>s.number),[1,2,3,4,5,6,7,8]);
+  const beforeIds=project.shots.map(s=>s.id);
+  const past=await page.evaluate(()=>window.__astra.G.getState().past.length);await page.getByRole('button',{name:'Analyze',exact:true}).click();
+  await page.waitForFunction(count=>window.__astra.G.getState().past.length>count,past);
+  assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id)),beforeIds);
+  const links=await page.evaluate(()=>{
+    const a=window.__astra,p=a.G.getState().project;
+    const result=a.asBreakupPlan({characters:[{name:'MEERA',description:'Updated safely'}],costumes:[{name:'Travel coat',characterName:'MEERA',sceneNumbers:['1A','4B']}]},p);
+    a.G.getState().set(()=>result.next);
+    const costume=result.next.costumes.find(c=>c.name==='Travel coat');
+    return {labels:costume.sceneIds.map(id=>a.asSceneLabel(result.next.scenes.find(s=>s.id===id))),character:result.next.characters.find(c=>c.id===costume.characterId)?.name,exported:a.asBreakupExport(result.next).costumes.find(c=>c.name==='Travel coat').sceneNumbers};
+  });
+  assert.deepEqual(links,{labels:['1A','4B'],character:'MEERA',exported:['1A','4B']});
+  await page.goto(base+'#/project');
+  assert.equal(await page.getByText('SC 1A',{exact:true}).count(),1);
+  let download=page.waitForEvent('download');await page.getByRole('button',{name:'JSON',exact:true}).click();
+  const exported=path.join(root,'test-results','numbered-shots.json');await(await download).saveAs(exported);
+  const shots=JSON.parse(await fs.readFile(exported,'utf8'));assert.ok(shots.some(s=>s.scene==='1A'&&s.code.startsWith('S1A-SH')));assert.ok(shots.some(s=>s.scene==='4B'&&s.rawScene===8));
+  await page.goto(base+'#/io');download=page.waitForEvent('download');await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
+  const backup=path.join(root,'test-results','numbered.ffproj.json');await(await download).saveAs(backup);
+  const fresh=await session(t);await fresh.goto(base+'#/io');await fresh.locator('input[type=file]').last().setInputFiles(backup);await fresh.getByRole('button',{name:'Apply import',exact:true}).click();
+  assert.deepEqual(await fresh.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),scriptLabels);
+  await fresh.goto(base+'#/script');assert.equal(await fresh.getByText('Script scene 4B',{exact:true}).count(),1);
+});
+
+test('Fountain scene markers and prefixed labels parse without treating transitions as dialogue',async t=>{
+  const page=await session(t);
+  const parsed=await page.evaluate(()=>window.__astra.tl('FADE IN:\n\n1 INT. ROOM - DAY 1\n\nA chair.\n\nRAVI\n(softly)\nHello.\n\nCUT TO:\n\nINT. ROOM - NIGHT #1A#\n\nA lamp.\n\n1B EXT. ROAD - DAY 1B\n\nAn empty road.\n\nFADE OUT.'));
+  assert.deepEqual(parsed.map(s=>s.scriptNumber),['1','1A','1B']);assert.deepEqual(parsed.map(s=>s.time),['DAY','NIGHT','DAY']);assert.deepEqual(parsed[0].dialogue,[{character:'RAVI',line:'Hello.'}]);
+  const rejected=await page.evaluate(()=>{try{window.__astra.asImportFdx('<!DOCTYPE FinalDraft [<!ENTITY bad "x">]><FinalDraft><Content/></FinalDraft>');return false}catch{return true}});assert.equal(rejected,true);
+});
+
+test('removed scenes stay outside active script counts and their production work returns when reintroduced',async t=>{
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  const shots=await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id).sort());
+  await page.getByRole('button',{name:'Edit source',exact:true}).click();await page.getByRole('textbox',{name:'Screenplay source'}).fill('INT. TEA STALL - NIGHT #1#\n\nOne remaining scene.');
+  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===1);
+  assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),['1']);
+  assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.archivedScenes.length),7);
+  assert.deepEqual(await page.evaluate(()=>{const p=window.__astra.G.getState().project;return [...p.shots,...p.archivedShots].map(s=>s.id).sort()}),shots);
+  assert.equal(await page.getByRole('heading',{name:'Retained production scenes'}).count(),1);
+  await page.locator('main input[type=file]').setInputFiles(path.join(__dirname,'fixtures','numbered-screenplay.fdx'));
+  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id).sort()),shots);
+  assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.archivedScenes.length),0);
+});
+
+test('LLM analysis uses authoritative script scene labels even when model IDs and numbers change',async t=>{
+  const page=await session(t);await importNumberedScript(page);
+  const response=await page.evaluate(()=>{
+    const a=window.__astra,p=a.sl(a.G.getState().project);
+    p.scenes=p.scenes.map((scene,index)=>({...scene,number:index+101,scriptNumber:'MODEL-'+index}));
+    return JSON.stringify(p);
+  });
+  await page.route('https://numbered-llm.test/chat/completions',route=>route.fulfill({json:{choices:[{message:{content:response}}]}}));
+  await page.evaluate(()=>window.__astra.K.getState().update({llm:[{id:'numbered',kind:'openai',name:'test',baseUrl:'https://numbered-llm.test',model:'test',apiKey:''}],activeLlmId:'numbered'}));
+  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),scriptLabels);
+});
+
+test('storyboard shot labels stay above the frame for below, right and hidden captions',async t=>{
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.shots.length>0);
+  await page.goto(base+'#/pdf');
+  const caption=page.locator('main aside').getByText('Caption',{exact:true}).locator('..').locator('select');
+  for(const mode of ['below','right','none']){
+    await caption.selectOption(mode);
+    const positions=await page.locator('main .astra-storyboard-visual').evaluateAll(nodes=>nodes.map(node=>{const label=node.querySelector('.astra-storyboard-label').getBoundingClientRect(),frame=node.querySelector('.astra-storyboard-frame').getBoundingClientRect();return{text:node.querySelector('.astra-storyboard-label').textContent,labelBottom:label.bottom,frameTop:frame.top,labelLeft:label.left,frameLeft:frame.left,frameWidth:frame.width,frameHeight:frame.height}}));
+    assert.ok(positions.length>0);assert.ok(positions.some(p=>p.text.startsWith('S1A-SH')));
+    assert.ok(positions.every(p=>p.labelBottom<=p.frameTop&&Math.abs(p.labelLeft-p.frameLeft)<1&&p.frameHeight>0&&p.frameWidth>0),'labels are outside the top-left frame edge');
+  }
+  await page.locator('main .astra-storyboard-visual').first().scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(root,'test-results','storyboard-labels.png'),fullPage:true});
+  await page.emulateMedia({media:'print'});
+  const pdf=await page.pdf({path:path.join(root,'test-results','numbered-storyboard.pdf'),preferCSSPageSize:true,printBackground:true});assert.equal(pdf.subarray(0,5).toString(),'%PDF-');
+});
 
 test('all screens load; idle autosave stops; changed content mirrors once',async t=>{
   const page=await session(t);
@@ -136,7 +246,7 @@ test('offline and LLM reanalysis preserve edits, approved media and removed scen
     const next=a.sl(p),repeat=a.sl(next);
     const incoming=structuredClone(a.qc);incoming.characters[0].id='renamed-ravi';incoming.scenes[0].id='renamed-scene';incoming.shots.forEach(s=>{if(s.sceneId===a.qc.scenes[0].id)s.sceneId='renamed-scene';s.characterIds=s.characterIds.map(id=>id===a.qc.characters[0].id?'renamed-ravi':id)});
     const ai=a.asMergeAnalysis(p,incoming),removed=a.sl({...p,script:'EXT. NEW LOCATION - DAY\n\nOnly one scene now.'});
-    return {preserved:next.shots.filter(s=>p.shots.some(old=>old.id===s.id)),initial:JSON.parse(initial),scenes:next.scenes.length,oldIdsPresent:oldIds.every(id=>next.scenes.some(s=>s.id===id)),repeat:JSON.stringify(next)===JSON.stringify(repeat),aiPreserved:JSON.stringify(ai.shots)===initial,removedRetained:oldIds.every(id=>removed.scenes.some(s=>s.id===id))};
+    return {preserved:next.shots.filter(s=>p.shots.some(old=>old.id===s.id)),initial:JSON.parse(initial),scenes:next.scenes.length,oldIdsPresent:oldIds.every(id=>next.scenes.some(s=>s.id===id)),repeat:JSON.stringify(next)===JSON.stringify(repeat),aiPreserved:JSON.stringify(ai.shots)===initial,removedRetained:oldIds.every(id=>[...removed.scenes,...removed.archivedScenes].some(s=>s.id===id))};
   });
   assert.deepEqual(result.preserved,result.initial);assert.equal(result.scenes,3);assert.equal(result.oldIdsPresent,true);assert.equal(result.repeat,true);assert.equal(result.aiPreserved,true);assert.equal(result.removedRetained,true);
   await page.goto(base+'#/script');await page.getByRole('button',{name:'Analyze',exact:true}).click();
@@ -244,7 +354,7 @@ test('edits made during an LLM request are not overwritten',async t=>{
   await page.route('https://llm.test/chat/completions',async route=>{requested();await responseReady;await route.fulfill({json:{choices:[{message:{content:response}}]}})});
   await page.evaluate(()=>window.__astra.K.getState().update({llm:[{id:'test',kind:'openai',name:'test',baseUrl:'https://llm.test',model:'test',apiKey:''}],activeLlmId:'test'}));
   await page.goto(base+'#/script');await page.getByRole('button',{name:'Analyze',exact:true}).click();await requestSeen;
-  await page.locator('main textarea').fill('INT. EDITED DURING ANALYSIS - DAY\n\nKeep this edit.');release();
+  await page.getByRole('button',{name:'Edit source',exact:true}).click();await page.locator('main textarea').fill('INT. EDITED DURING ANALYSIS - DAY\n\nKeep this edit.');release();
   await page.waitForFunction(()=>document.body.innerText.includes('Project changed during analysis'));
   assert.match(await page.locator('main textarea').inputValue(),/Keep this edit/);
 });
@@ -264,11 +374,15 @@ test('WebM contains source audio, respects timing and cleans up cancellation',as
   const output=path.join(root,'test-results','audio-review.webm');await(await downloaded).saveAs(output);
   const info=JSON.parse(execFileSync('ffprobe',['-v','error','-show_streams','-show_format','-of','json',output],{encoding:'utf8'}));
   assert.ok(info.streams.some(s=>s.codec_type==='video'));assert.ok(info.streams.some(s=>s.codec_type==='audio'));
-  const video=info.streams.find(s=>s.codec_type==='video');assert.ok(Math.abs(video.width/video.height-2.39)<.01);
+  const video=info.streams.find(s=>s.codec_type==='video');assert.ok(Math.abs(video.width/(video.height-32)-2.39)<.01,'picture aspect is retained below the separate shot-label header');
   const seconds=mediaDuration(output);assert.ok(seconds>=1.4 && seconds<2.2,String(seconds));
   // Decode succeeds; separately inspect sample energy to distinguish a silent track.
   const pcm=execFileSync('ffmpeg',['-v','error','-i',output,'-vn','-f','s16le','-ac','1','-ar','8000','-']);
   let peak=0;for(let i=0;i+1<pcm.length;i+=2)peak=Math.max(peak,Math.abs(pcm.readInt16LE(i)));assert.ok(peak>100,'source audio is audible');
+  const bottom=execFileSync('ffmpeg',['-v','error','-ss','0.5','-i',output,'-frames:v','1','-vf','crop=100:24:(iw-100)/2:ih-24','-pix_fmt','rgb24','-f','rawvideo','-']);
+  for(let i=0;i<bottom.length;i+=3)assert.ok(bottom[i]<40&&bottom[i+1]<40&&bottom[i+2]>150,'picture remains blue and unobstructed down to its bottom edge');
+  const header=execFileSync('ffmpeg',['-v','error','-ss','0.5','-i',output,'-frames:v','1','-vf','crop=200:32:0:0','-pix_fmt','rgb24','-f','rawvideo','-']);
+  let textPixels=0;for(let i=0;i<header.length;i+=3)if(header[i]>150&&header[i+1]>150&&header[i+2]>150)textPixels++;assert.ok(textPixels>10,'shot code is present in the separate header');
   await page.evaluate(()=>window.__astra.G.getState().updateShot(window.__astra.G.getState().project.shots[0].id,{duration:200}));
   await page.getByRole('button',{name:'WebM review',exact:true}).click();await page.getByRole('button',{name:'Cancel export',exact:true}).click();
   await page.waitForFunction(()=>document.body.innerText.includes('Export cancelled'));
