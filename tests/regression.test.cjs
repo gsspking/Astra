@@ -11,7 +11,7 @@ let server,browser,base;
 const image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=';
 before(async()=>{
   // Test-only hooks are appended to the served module, never the shipping file.
-  const html=(await fs.readFile(path.join(root,'ASTRA_Studio_V4F.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,qc,Uc,Go,Wo,dl,F_,L_,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
+  const html=(await fs.readFile(path.join(root,'ASTRA_Studio_V4F.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,qc,Uc,Go,Wo,dl,nu,tu,F_,L_,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
   server=http.createServer((req,res)=>{res.setHeader('content-type','text/html');res.end(html)});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   base=`http://127.0.0.1:${server.address().port}/ASTRA_Studio_V4F.html`;
@@ -36,7 +36,7 @@ function mediaDuration(file){
 
 test('all screens load; idle autosave stops; changed content mirrors once',async t=>{
   const page=await session(t);
-  for(const label of ['Projects','Home','Project Setup','Skills','Connections','Script','Breakup','Production','Rough Cut','Production Control','Dashboard','Import / Export','PDF Export','Settings','Studio PRD']){
+  for(const label of ['Projects','Home','Project Setup','Skills','Connections','Script','Breakup','Production','Rough Cut','Production Control','Import / Export','PDF Export','Settings','Studio PRD']){
     await page.locator('aside a').filter({hasText:new RegExp('^\\s*'+label+'$')}).click();
     assert.ok(await page.locator('h1').count()>=1,label);
   }
@@ -54,6 +54,60 @@ test('all screens load; idle autosave stops; changed content mirrors once',async
   const count=await page.evaluate(()=>window.__writes.length);
   await page.waitForTimeout(1200);
   assert.equal(await page.evaluate(()=>window.__writes.length),count);
+});
+
+test('Home combines project details and live dashboard progress; old dashboard links redirect',async t=>{
+  const page=await session(t);
+  assert.equal(await page.locator('aside a').filter({hasText:/^\s*Dashboard$/}).count(),0);
+  assert.equal(await page.getByRole('heading',{name:'The Red Umbrella',exact:true}).count(),1);
+  assert.equal(await page.getByRole('heading',{name:'Production overview',exact:true}).count(),1);
+  for(const text of ['Stage reached (% of shots)','Scenes × shots heat map','Film timeline','Missing images','Missing videos','Generated runtime','Failed jobs'])assert.equal(await page.getByText(text,{exact:true}).count(),1,text);
+  const missing=page.getByText('Missing images',{exact:true}).locator('..');
+  assert.match(await missing.innerText(),/6/);
+  await page.evaluate(()=>{const a=window.__astra;a.G.getState().updateShot(a.G.getState().project.shots[0].id,{stage:'image',image:{versions:[{id:'test',url:'https://example.test/unused-frame.png',createdAt:1,source:'upload'}],approvedId:null}})});
+  assert.match(await missing.innerText(),/5/);
+  await page.goto(base+'#/dashboard');
+  await page.waitForURL(url=>url.hash==='#/');
+  assert.equal(await page.getByRole('heading',{name:'Production overview',exact:true}).count(),1);
+  assert.equal(await page.title(),'Home — ASTRA Studio');
+});
+
+test('Home banner upload persists per project, supports reset/undo and survives backup import',async t=>{
+  const page=await session(t),banner=page.getByRole('region',{name:'Home banner',exact:true});
+  const originalId=await page.evaluate(()=>window.__astra.Kl.getState().activeId);
+  const originalThumbnail=await page.evaluate(()=>window.__astra.G.getState().project.meta.thumbnail);
+  await banner.locator('input[type=file]').setInputFiles({name:'banner.png',mimeType:'image/png',buffer:Buffer.from(image.split(',')[1],'base64')});
+  await page.waitForFunction(()=>window.__astra.G.getState().project.meta.bannerImage?.startsWith('blob:'));
+  await banner.getByRole('img',{name:'Project banner'}).evaluate(img=>img.decode());
+  assert.match(await banner.getByRole('img').getAttribute('src'),/^blob:/);
+  assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.meta.thumbnail),originalThumbnail);
+  await page.evaluate(()=>window.__astra.Ul());await page.reload();
+  await page.waitForFunction(()=>window.__astra?.G.getState().hydrated);
+  await banner.getByRole('img').evaluate(img=>img.decode());assert.match(await banner.getByRole('img').getAttribute('src'),/^blob:/);
+  await page.evaluate(()=>window.__astra.nu({title:'Second film'}));
+  assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.meta.bannerImage),'');
+  assert.match(await banner.getByRole('img').getAttribute('src'),/^data:image/);
+  await page.evaluate(id=>window.__astra.tu(id),originalId);
+  assert.match(await banner.getByRole('img').getAttribute('src'),/^blob:/);
+  await banner.getByRole('button',{name:'Reset banner',exact:true}).click();
+  assert.match(await banner.getByRole('img').getAttribute('src'),/^data:image/);
+  await page.keyboard.press('Control+z');
+  await page.waitForFunction(()=>window.__astra.G.getState().project.meta.bannerImage?.startsWith('blob:'));
+  // Undecodable images leave the previous banner intact and surface a file error.
+  const before=await banner.getByRole('img').getAttribute('src');
+  await banner.locator('input[type=file]').setInputFiles({name:'invalid.png',mimeType:'image/png',buffer:Buffer.from('not an image')});
+  await page.waitForFunction(()=>document.body.innerText.includes('File could not be processed'));
+  assert.equal(await banner.getByRole('img').getAttribute('src'),before);
+  await page.goto(base+'#/io');
+  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
+  const backupPath=path.join(root,'test-results','banner.ffproj.json');await(await downloaded).saveAs(backupPath);
+  const backup=JSON.parse(await fs.readFile(backupPath,'utf8'));assert.equal(backup.meta.bannerImage,image);
+  const fresh=await session(t);await fresh.goto(base+'#/io');
+  await fresh.locator('input[type=file]').last().setInputFiles(backupPath);await fresh.getByRole('button',{name:'Apply import',exact:true}).click();
+  await fresh.locator('aside a').filter({hasText:/^\s*Home$/}).click();
+  const restored=fresh.getByRole('region',{name:'Home banner'}).getByRole('img');await restored.evaluate(img=>img.decode());
+  assert.match(await restored.getAttribute('src'),/^blob:/);
+  assert.equal(await fresh.evaluate(async()=> (await window.__astra.asMediaPortable(window.__astra.G.getState().project)).meta.bannerImage),image);
 });
 
 test('save failures retain last success; read-only flush does not write',async t=>{
