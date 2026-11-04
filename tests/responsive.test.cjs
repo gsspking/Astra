@@ -79,6 +79,7 @@ test('phone asset editing uses a focused detail screen and retains edits',async 
 
 test('phone shot cards, wide table and tablet storyboards remain usable',async t=>{
   const page=await pageFor(t,390,844);await page.getByRole('navigation',{name:'Quick navigation'}).getByRole('link',{name:'Production',exact:true}).click();
+  await page.getByRole('button',{name:'Expand all',exact:true}).click();
   assert.equal(await page.locator('.astra-shot-grid').first().isVisible(),true);assert.equal(await page.locator('.astra-shot-grid').first().evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(' ').length),1);
   await page.getByRole('button',{name:'crux',exact:true}).click();const table=page.getByRole('region',{name:'Shot table — scroll horizontally for more columns'}).first();await table.waitFor();
   assert.ok(await table.evaluate(node=>node.scrollWidth>node.clientWidth));await table.focus();await page.keyboard.press('ArrowRight');await page.waitForFunction(()=>document.querySelector('.astra-production-table-region').scrollLeft>0);await noOuterOverflow(page);
