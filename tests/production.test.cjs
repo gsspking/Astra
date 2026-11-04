@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {execFileSync}=require('node:child_process');const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..');let browser,server,base,video;
 before(async()=>{
-  const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,Kl,Ul,Uc,qc,I_,asMediaHydrate,asMediaPortable};</script>`);
+  const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,Kl,Ul,Uc,qc,I_,nu,tu,asMediaHydrate,asMediaPortable};</script>`);
   server=http.createServer((req,res)=>{res.setHeader('content-type','text/html');res.end(html)});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}/index.html`;
   browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
   await fs.mkdir(path.join(root,'test-results'),{recursive:true});const fixture=path.join(root,'test-results','production-video.webm');
@@ -45,16 +45,53 @@ test('focus on a later page preserves pagination and scene expansion',async t=>{
   await scene(page,'25').getByRole('button',{name:'Exit focus for scene 25',exact:true}).click();assert.match(await page.locator('.astra-production-pagination').innerText(),/page 3 \/ 3/);assert.equal(await scene(page,'25').getByRole('button',{name:'Expand scene 25'}).count(),1);
 });
 
-test('Flick details follow PDF field selections and hide every unselected field',async t=>{
+test('Flick field toggles filter thumbnails and shot cards independently of PDF export',async t=>{
   const page=await session(t);await seedMedia(page);await page.goto(base+'#/pdf');const options=page.locator('.astra-pdf-options');
-  for(const field of ['description','type','angle','movement','lens','duration','dialogue','characters','notes','imagePrompt']){const button=options.getByRole('button',{name:field,exact:true});const wanted=['lens','duration'].includes(field);if((await button.getAttribute('aria-pressed')==='true')!==wanted)await button.click();}
-  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('ff-pdf-last')).fields.length===2);
-  await page.goto(base+'#/project');await flick(page);await page.getByRole('button',{name:'Expand all',exact:true}).click();
-  const details=page.locator('.astra-production-shot-card').first().locator('.astra-selected-shot-details');assert.deepEqual(await details.locator('dt').allTextContents(),['Lens','Duration']);assert.doesNotMatch(await details.innerText(),/ACTION_ONLY|NOTES_ONLY/);assert.match(await details.innerText(),/LENS_ONLY_0/);assert.equal(await page.locator('.astra-production-shot-card').first().getByText('video',{exact:true}).count(),0,'unselected status is hidden too');
-  await page.getByRole('button',{name:'Collapse all',exact:true}).click();assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Lens','Duration']);
-  // Another PDF tab updates visible fields through the storage event as well.
-  const other=await page.context().newPage();await other.goto(base+'#/pdf');await other.locator('.astra-pdf-options').getByRole('button',{name:'lens',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.astra-selected-shot-details [data-field="lens"]'));
-  assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Duration']);await other.locator('.astra-pdf-options').getByRole('button',{name:'stage',exact:true}).click();await page.waitForFunction(()=>document.querySelector('.astra-selected-shot-details [data-field="stage"]'));assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Duration','Stage']);await other.locator('.astra-pdf-options').getByRole('button',{name:'duration',exact:true}).click();await other.locator('.astra-pdf-options').getByRole('button',{name:'stage',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.astra-selected-shot-details dt'));assert.equal((await scene(page,'1').locator('.astra-scene-summary').innerText()).trim(),'3 shots');await other.close();
+  for(const name of await options.getByRole('button',{pressed:true}).allTextContents())await options.getByRole('button',{name,exact:true}).click();
+  await options.getByRole('button',{name:'notes',exact:true}).click();
+  await page.waitForFunction(()=>JSON.stringify(JSON.parse(localStorage.getItem('ff-pdf-last')).fields)==='["notes"]');
+  await page.goto(base+'#/project');await flick(page);
+  assert.equal(await page.getByText('Choose fields in PDF Export',{exact:true}).count(),0);
+  const controls=page.getByRole('group',{name:'Flick visible details'});
+  assert.equal(await controls.getByRole('button').count(),17);
+  assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Description','Type','Lens','Duration','Dialogue'],'Flick starts with its own defaults');
+  for(const name of await controls.getByRole('button',{pressed:true}).allTextContents())if(!['Lens','Duration'].includes(name))await controls.getByRole('button',{name,exact:true}).click();
+  await page.getByRole('button',{name:'Expand all',exact:true}).click();
+  const details=page.locator('.astra-production-shot-card').first().locator('.astra-selected-shot-details');
+  assert.deepEqual(await details.locator('dt').allTextContents(),['Lens','Duration']);assert.doesNotMatch(await details.innerText(),/ACTION_ONLY|NOTES_ONLY/);assert.match(await details.innerText(),/LENS_ONLY_0/);
+  assert.equal(await page.locator('.astra-production-shot-card').first().getByText('video',{exact:true}).count(),0,'unselected status stays hidden');
+  await page.getByRole('button',{name:'Collapse all',exact:true}).click();
+  assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Lens','Duration']);
+  await page.getByRole('button',{name:'Scene list',exact:true}).click();
+  assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Lens','Duration']);
+  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('ff-pdf-last')).fields),['notes'],'Flick changes leave PDF settings alone');
+  const other=await page.context().newPage();await other.goto(base+'#/pdf');
+  await other.locator('.astra-pdf-options').getByRole('button',{name:'notes',exact:true}).click();
+  await other.locator('.astra-pdf-options').getByRole('button',{name:'stage',exact:true}).click();
+  await page.waitForFunction(()=>JSON.stringify(JSON.parse(localStorage.getItem('ff-pdf-last')).fields)==='["stage"]');
+  assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Lens','Duration'],'PDF changes in another tab leave Flick alone');await other.close();
+  await controls.getByRole('button',{name:'Lens',exact:true}).click();await controls.getByRole('button',{name:'Stage',exact:true}).click();
+  assert.deepEqual(await scene(page,'1').locator('.astra-selected-shot-details dt').allTextContents(),['Duration','Stage']);
+  await page.goto(base+'#/pdf');assert.equal(await page.locator('.astra-pdf-options').getByRole('button',{name:'stage',exact:true}).getAttribute('aria-pressed'),'true');
+  await page.goto(base+'#/project');assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Duration','Stage']);
+  await controls.getByRole('button',{name:'Duration',exact:true}).click();await controls.getByRole('button',{name:'Stage',exact:true}).click();
+  assert.equal(await scene(page,'1').locator('.astra-selected-shot-details dt').count(),0);assert.equal((await scene(page,'1').locator('.astra-scene-summary').innerText()).trim(),'3 shots');
+  await page.reload();await controls.waitFor();assert.equal(await controls.getByRole('button',{pressed:true}).count(),0,'an empty choice survives reload');
+  await page.getByRole('button',{name:'Expand all',exact:true}).click();assert.equal(await page.locator('.astra-production-shot-card .astra-selected-shot-details dt').count(),0);
+});
+
+test('Flick detail choices persist per project without overwriting another project',async t=>{
+  const page=await session(t);await flick(page);const controls=page.getByRole('group',{name:'Flick visible details'});
+  for(const name of await controls.getByRole('button',{pressed:true}).allTextContents())await controls.getByRole('button',{name,exact:true}).click();
+  await controls.getByRole('button',{name:'Notes',exact:true}).click();
+  const originalId=await page.evaluate(()=>window.__astra.Kl.getState().activeId);
+  await page.evaluate(()=>window.__astra.nu({title:'Separate Flick preferences'}));await flick(page);
+  assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Description','Type','Lens','Duration','Dialogue']);
+  for(const name of await controls.getByRole('button',{pressed:true}).allTextContents())await controls.getByRole('button',{name,exact:true}).click();await controls.getByRole('button',{name:'Stage',exact:true}).click();
+  const secondId=await page.evaluate(()=>window.__astra.Kl.getState().activeId);
+  await page.evaluate(id=>window.__astra.tu(id),originalId);assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Notes']);
+  await page.evaluate(id=>window.__astra.tu(id),secondId);assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Stage']);
+  await page.reload();await controls.waitFor();assert.deepEqual(await controls.getByRole('button',{pressed:true}).allTextContents(),['Stage']);
 });
 
 test('scene hero image/video selections come from shot versions and survive export/import',async t=>{
@@ -105,6 +142,11 @@ test('uploaded image and video versions can be deleted completely without leavin
 });
 
 test('collapsed cards, focus and media controls work at phone and tablet widths',async t=>{
-  for(const width of [320,390,820]){const page=await session(t,width);await seedMedia(page);await flick(page);await page.getByRole('button',{name:'Scene list',exact:true}).click();await scene(page,'1').getByRole('button',{name:'Focus scene 1',exact:true}).tap();assert.equal(await page.locator('.astra-production-scene').count(),1);await page.getByRole('combobox',{name:'Thumbnail media'}).selectOption('both');
+  for(const width of [320,390,820]){const page=await session(t,width);await seedMedia(page);await flick(page);
+    const fields=page.getByRole('group',{name:'Flick visible details'}),notes=fields.getByRole('button',{name:'Notes',exact:true});await notes.tap();assert.equal(await notes.getAttribute('aria-pressed'),'true');
+    assert.match(await scene(page,'1').locator('[data-field="notes"]').innerText(),/NOTES_ONLY_0/);
+    if(width<768){const bounds=await notes.boundingBox();assert.ok(bounds.width>=44&&bounds.height>=44,'detail toggles have touch-sized targets');assert.ok(await fields.evaluate(node=>node.scrollWidth>node.clientWidth),'phones scroll the field row without crowding scene content');}
+    await page.screenshot({path:path.join(root,'test-results',`flick-details-${width}.png`)});
+    await page.getByRole('button',{name:'Scene list',exact:true}).click();await scene(page,'1').getByRole('button',{name:'Focus scene 1',exact:true}).tap();assert.equal(await page.locator('.astra-production-scene').count(),1);await page.getByRole('combobox',{name:'Thumbnail media'}).selectOption('both');
     const first=page.locator('.astra-production-shot-card').first();await first.getByRole('button',{name:'Set scene hero image',exact:true}).tap();await page.getByRole('button',{name:'Show all scenes',exact:true}).tap();assert.equal(await page.locator('.astra-production-scene').count(),2);const size=await page.evaluate(()=>{const w=document.querySelector('.astra-workspace');return[w.clientWidth,w.scrollWidth]});assert.ok(size[1]<=size[0]+1);}
 });
