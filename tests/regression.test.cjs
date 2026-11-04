@@ -11,10 +11,10 @@ let server,browser,base;
 const image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=';
 before(async()=>{
   // Test-only hooks are appended to the served module, never the shipping file.
-  const html=(await fs.readFile(path.join(root,'ASTRA_Studio_V4F.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,qc,Uc,Go,Wo,dl,nu,tu,F_,L_,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
+  const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('</script>',`\nwindow.__astra={G,K,Kl,Rl,Ul,sl,j_,qc,Uc,Go,Wo,dl,nu,tu,F_,L_,asReclaimMedia,asMediaPut,asMediaHydrate,asMediaPortable,asGenerationVariables,asMergeAnalysis,asRenderAssembly,asMediaRecords,asMediaUrls,setMirror:v=>El=v,setWritable:v=>Il.canWrite=v};</script>`);
   server=http.createServer((req,res)=>{res.setHeader('content-type','text/html');res.end(html)});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-  base=`http://127.0.0.1:${server.address().port}/ASTRA_Studio_V4F.html`;
+  base=`http://127.0.0.1:${server.address().port}/index.html`;
   browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
   await fs.mkdir(path.join(root,'test-results'),{recursive:true});
 });

@@ -1,6 +1,6 @@
 # ASTRA Studio
 
-Open `ASTRA_Studio_V4F.html` in a current browser, or serve it with a static HTTP server. The application remains a single self-contained HTML file; Node.js is only used for regression tests.
+Open `index.html` in a current browser, or serve it with a static HTTP server. The application remains a single self-contained HTML file; Node.js is only used for regression tests.
 
 - Home combines the project overview with production metrics, stage progress, the scene/shot heat map and film timeline. Old Dashboard links redirect to Home. Use Upload banner / Change banner on the top image to save a banner for the current project, or Reset banner to restore the default. Banners are separate from project thumbnails and included in full project backups.
 - Projects autosave to IndexedDB after edits. Optional folder mirrors run after three seconds without edits. Save errors are shown, and the Saved timestamp advances only after a successful write.
