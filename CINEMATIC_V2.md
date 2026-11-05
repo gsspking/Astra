@@ -6,7 +6,7 @@ The proposed structured fields are a good fit: they separate creative intent, ac
 | --- | --- |
 | Structured shot planning | Shot inspector → Cinematic shot details: intent, emotion, coverage, camera/lens/acquisition settings, blocking, spatial continuity, composition, focus, start/end frames, alternate prompts, video negatives, QA, references and model overrides. |
 | Vision and look bible | Project Setup → Cinematic production planning, with native editable fields. |
-| Sequences, continuity events, model profiles | Editable collections in Project Setup; references are checked during native import. |
+| Sequences, continuity events, model profiles | Editable collections in Project Setup; references are checked during native import; deleting or renaming a referenced record is blocked in the editor. |
 | Scene dramatic analysis and departmental breakdown | Expanded production scenes → Scene dramatic and department breakdown. |
 | Asset continuity bible | Breakup inspector → Continuity bible, including identity/geography blocks and state/lighting/wardrobe variants. Populated idBlock/locBlock require explicit unlocking to edit. |
 | Generation provenance | Shot inspector → Image/Video generation provenance; metadata stays attached to each version through import/export. Older versions remain valid without provenance. |

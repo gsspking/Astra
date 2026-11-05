@@ -22,7 +22,7 @@ Populate every applicable creative input with specific, useful content derived f
 
 Fill `title`, `genres`, `expectedLengthMin`, `logline`, `synopsis`, `directingStyle`, `cinematographyStyle`, `editingStyle`, `languages`, `aspectRatio`, `frameRate`, `stylePrefix`, `styleSuffix`, `styleNegative`, `skillIds`, `glossary`, `thumbnail`, `bannerImage`, `bannerPosition`, `thumbView`.
 
-- `expectedLengthMin` is a positive number in minutes; decimals are allowed. Honor an explicitly supplied runtime. If absent, estimate from dialogue, action and intended pacing and identify the estimate in the synopsis. Do not blindly copy the example's one-minute target.
+- `expectedLengthMin` is a positive number in minutes; decimals are allowed. Honor an explicitly supplied runtime. If absent, estimate from dialogue, action and intended pacing and identify the estimate in the synopsis. Do not blindly copy the example's four-minute target.
 - `frameRate` is a positive numeric FPS, usually 24, 25 or 30; use the requested rate. `aspectRatio` is a string such as `16:9`, `2.39:1`, `1.85:1`, `4:3`, `9:16` or `1:1`.
 - Use comma-separated strings for genres and languages. Keep original names and non-English dialogue, including Telugu script. The glossary can map names and production terms between languages.
 - Prefix/suffix/negative prompts define a coherent visual style. Write project-specific text, not an unrelated list of styles from the example.
@@ -79,13 +79,13 @@ Break every scene into enough shots to cover its action and dialogue without dup
 3. Every shot has a positive finite `duration` in seconds (JSON number, not a string). Choose a positive integer frame count per shot and set `duration = frames / frameRate`. Each shot must be at least one frame. Do not round every duration to whole seconds when that would break the budget.
 4. Redistribute rounding remainders between appropriate shots so the sum of shot frame counts is exactly `targetFrames`; final `abs(sum(shots.duration) - targetSeconds)` must be no more than one frame. Count each active shot once and exclude archived shots. ASTRA currently budgets transition text within shot durations; do not subtract a separate overlap.
 5. Do not silently change the requested runtime to match an incomplete shot list. If the script cannot plausibly fit the requested runtime, ask for a creative decision or identify the constraint before generating the final file. Do not make dialogue unnaturally fast. For ordinary model generation limits, split a long shot into coherent consecutive shots while preserving the same overall budget.
-6. Re-check the budget after every shot-list change. The complete example is 1 minute, 24 FPS and six shots of 8, 10, 7, 12, 9 and 14 seconds (60 seconds total). These allocations are illustrative, not a template for other scripts.
+6. Re-check the budget after every shot-list change. The complete example is 4 minutes, 24 FPS and 24 shots of 10 seconds (240 seconds total), grouped into eight scenes. These allocations are illustrative, not a template for other scripts.
 
 ## 7. Media, approvals and truthful completion
 
 `image` and `video` each use `{ "versions": [], "approvedId": null }` until media is supplied/generated. A real version is `{id, url, createdAt, source}`; `approvedId` is null or an existing version ID in that same media collection. Use portable media data URLs or actual accessible HTTPS media URLs. Do not invent paths, images, videos, approvals or completed rendering.
 
-The example includes small labelled DEMO reference images and a one-second color-card WebM to demonstrate every media control, hero selection and backup field. They are not film footage. REMOVE all example thumbnails, banners, refs, angle images, shot media and hero selections when adapting it to a different script unless replacing them with actual supplied media. The color-card clip's duration is not the editorial runtime budget.
+The example intentionally contains no image/video media or fabricated media approvals. REMOVE all example thumbnails, banners, refs, angle images, shot media and hero selections if adapting an older example that includes them. Use actual supplied media when available; otherwise retain empty media slots. Shot duration is the editorial runtime budget.
 
 A fully filled planning project can legitimately have no media yet; completion means all applicable planning inputs and links are populated honestly. Do not claim that a JSON plan alone generated a finished film.
 
@@ -119,3 +119,8 @@ Populate the structured fields in project_schema.json in addition to all earlier
 - Each image/video version additionally carries modelProfileId, seed (string), promptHash, referenceIds, durationS, fps, width, height, qaStatus and parentVersionId. Leave values empty/null until actual generation measurements are known. Never fabricate provenance or QA results. A parentVersionId references another version in the same shot and media kind. These controls allow recording provenance; existing generators do not automatically populate all of it.
 
 Version 2 keeps every legacy field. ASTRA's assembled image prompt includes linked identity/geography blocks, look styleBlock and structured shot framing/blocking/focus/start-frame direction. Video generation uses videoNegativePrompt when provided. Alternate prompts and model overrides remain explicit planning choices; no provider-specific fallback is silently selected. Event records and continuityFlags describe continuity requirements; they are not automatic visual verification of generated footage.
+
+
+## Single project file and eight-scene example
+
+The example contains eight scenes (1, 1A, 1B, 2, 3, 4, 4A, 4B), 24 shots and a 240-second runtime. Every applicable creative and production field is populated. Image/video URLs and versions are intentionally empty. Empty ID selectors and arrays represent inapplicable relationships or absent history, not omitted planning work. Never fabricate approvals, media, history or locked fields simply to fill a field. Return ONE complete project JSON covering settings, screenplay, breakdown, assets, prompts and production planning. ASTRA restores the entire project with one import. Connections/API secrets and device preferences remain local and are excluded from the project file.
