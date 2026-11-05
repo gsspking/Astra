@@ -5,8 +5,228 @@
     "meta"
   ],
   "properties": {
+    "vision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "statement": {
+          "type": "string"
+        },
+        "theme": {
+          "type": "string"
+        },
+        "centralDramaticQuestion": {
+          "type": "string"
+        },
+        "visualMetaphor": {
+          "type": "string"
+        },
+        "centralImage": {
+          "type": "string"
+        },
+        "emotionalArc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "motifs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "soundMusicIntent": {
+          "type": "string"
+        }
+      }
+    },
+    "lookBible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "cameraLanguage": {
+          "type": "string"
+        },
+        "lensLanguage": {
+          "type": "string"
+        },
+        "movementLanguage": {
+          "type": "string"
+        },
+        "blockingLanguage": {
+          "type": "string"
+        },
+        "lightingLanguage": {
+          "type": "string"
+        },
+        "colorLanguage": {
+          "type": "string"
+        },
+        "textureLanguage": {
+          "type": "string"
+        },
+        "pacingLanguage": {
+          "type": "string"
+        },
+        "performanceLanguage": {
+          "type": "string"
+        },
+        "styleBlock": {
+          "type": "string"
+        },
+        "negativeBlock": {
+          "type": "string"
+        }
+      }
+    },
+    "sequences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "order": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "act": {
+            "type": "string"
+          },
+          "sceneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dramaticGoal": {
+            "type": "string"
+          },
+          "tensionCurve": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "palette": {
+            "type": "string"
+          },
+          "soundMusicIntent": {
+            "type": "string"
+          },
+          "editingIntent": {
+            "type": "string"
+          },
+          "plannedDurationS": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "continuityEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sceneId": {
+            "type": "string"
+          },
+          "shotId": {
+            "type": "string"
+          },
+          "assetType": {
+            "type": "string"
+          },
+          "assetId": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "before": {
+            "type": "string"
+          },
+          "after": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "verificationStatus": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "modelProfiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "modality": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [],
+            "properties": {}
+          },
+          "referencePolicy": {
+            "type": "string"
+          },
+          "knownLimits": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "schemaVersion": {
-      "const": 1
+      "const": 2
     },
     "meta": {
       "type": "object",
@@ -270,6 +490,43 @@
           "name"
         ],
         "properties": {
+          "idBlock": {
+            "type": "string"
+          },
+          "gestureSignature": {
+            "type": "string"
+          },
+          "stateVariants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "sceneIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "shotIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -396,6 +653,46 @@
           "name"
         ],
         "properties": {
+          "locBlock": {
+            "type": "string"
+          },
+          "geographyMap": {
+            "type": "string"
+          },
+          "sunDirection": {
+            "type": "string"
+          },
+          "lightingVariants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "sceneIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "shotIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -510,6 +807,46 @@
           "name"
         ],
         "properties": {
+          "propBlock": {
+            "type": "string"
+          },
+          "dimensions": {
+            "type": "string"
+          },
+          "physicalState": {
+            "type": "string"
+          },
+          "stateVariants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "sceneIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "shotIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -618,6 +955,43 @@
           "name"
         ],
         "properties": {
+          "wardrobeBlock": {
+            "type": "string"
+          },
+          "wearState": {
+            "type": "string"
+          },
+          "wardrobeChanges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "sceneIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "shotIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -724,6 +1098,156 @@
           "slug"
         ],
         "properties": {
+          "sequenceId": {
+            "type": "string"
+          },
+          "scriptPages": {
+            "type": "string"
+          },
+          "estimatedScreenTimeS": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "storyFunction": {
+            "type": "string"
+          },
+          "conflict": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "sceneTurn": {
+            "type": "string"
+          },
+          "emotionalStart": {
+            "type": "string"
+          },
+          "emotionalEnd": {
+            "type": "string"
+          },
+          "tensionScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "directorIntent": {
+            "type": "string"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "sunDirection": {
+            "type": "string"
+          },
+          "breakdown": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "speakingCast": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "nonSpeakingCast": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "props": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "costumes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "vehicles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "animals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "setDressing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "makeupHair": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "stunts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "practicalSfx": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "vfx": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "specialEquipment": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "lightingSetup": {
+                "type": "string"
+              },
+              "soundMusic": {
+                "type": "string"
+              },
+              "productionConstraints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -834,6 +1358,202 @@
           "order"
         ],
         "properties": {
+          "shotCode": {
+            "type": "string"
+          },
+          "sequenceId": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "emotion": {
+            "type": "string"
+          },
+          "coverageRole": {
+            "type": "string"
+          },
+          "cameraBody": {
+            "type": "string"
+          },
+          "captureFormat": {
+            "type": "string"
+          },
+          "lensFamily": {
+            "type": "string"
+          },
+          "lensMm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "aperture": {
+            "type": "string"
+          },
+          "cameraHeightM": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cameraSupport": {
+            "type": "string"
+          },
+          "cameraMoveStart": {
+            "type": "string"
+          },
+          "cameraMoveEnd": {
+            "type": "string"
+          },
+          "blocking": {
+            "type": "string"
+          },
+          "screenDirection": {
+            "type": "string"
+          },
+          "axisOfAction": {
+            "type": "string"
+          },
+          "eyelineNotes": {
+            "type": "string"
+          },
+          "composition": {
+            "type": "string"
+          },
+          "focusPlan": {
+            "type": "string"
+          },
+          "startFrameDescription": {
+            "type": "string"
+          },
+          "endFrameDescription": {
+            "type": "string"
+          },
+          "captureFps": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "shutterAngleDeg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "imageAltPrompt": {
+            "type": "string"
+          },
+          "videoAltPrompt": {
+            "type": "string"
+          },
+          "videoNegativePrompt": {
+            "type": "string"
+          },
+          "continuityFlags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "referenceSelections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "assetId": {
+                  "type": "string"
+                },
+                "referenceId": {
+                  "type": "string"
+                },
+                "angleId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "seedNotes": {
+            "type": "string"
+          },
+          "qa": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "technicalNotes": {
+                "type": "string"
+              },
+              "creativeNotes": {
+                "type": "string"
+              },
+              "continuityNotes": {
+                "type": "string"
+              },
+              "reviewer": {
+                "type": "string"
+              }
+            }
+          },
+          "modelOverrides": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "modelProfileId": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "negativePrompt": {
+                  "type": "string"
+                },
+                "editInstructions": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [],
+                  "properties": {}
+                },
+                "referenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -973,6 +1693,67 @@
                     "url"
                   ],
                   "properties": {
+                    "modelProfileId": {
+                      "type": "string"
+                    },
+                    "seed": {
+                      "type": "string"
+                    },
+                    "promptHash": {
+                      "type": "string"
+                    },
+                    "referenceIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "durationS": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fps": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "width": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "height": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "qaStatus": {
+                      "type": "string"
+                    },
+                    "parentVersionId": {
+                      "type": "string"
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -1015,6 +1796,67 @@
                     "url"
                   ],
                   "properties": {
+                    "modelProfileId": {
+                      "type": "string"
+                    },
+                    "seed": {
+                      "type": "string"
+                    },
+                    "promptHash": {
+                      "type": "string"
+                    },
+                    "referenceIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "durationS": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fps": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "width": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "height": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "qaStatus": {
+                      "type": "string"
+                    },
+                    "parentVersionId": {
+                      "type": "string"
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -1077,6 +1919,156 @@
           "slug"
         ],
         "properties": {
+          "sequenceId": {
+            "type": "string"
+          },
+          "scriptPages": {
+            "type": "string"
+          },
+          "estimatedScreenTimeS": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "storyFunction": {
+            "type": "string"
+          },
+          "conflict": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "sceneTurn": {
+            "type": "string"
+          },
+          "emotionalStart": {
+            "type": "string"
+          },
+          "emotionalEnd": {
+            "type": "string"
+          },
+          "tensionScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "directorIntent": {
+            "type": "string"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "sunDirection": {
+            "type": "string"
+          },
+          "breakdown": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "speakingCast": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "nonSpeakingCast": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "extras": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "props": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "costumes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "vehicles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "animals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "setDressing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "makeupHair": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "stunts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "practicalSfx": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "vfx": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "specialEquipment": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "lightingSetup": {
+                "type": "string"
+              },
+              "soundMusic": {
+                "type": "string"
+              },
+              "productionConstraints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -1187,6 +2179,202 @@
           "order"
         ],
         "properties": {
+          "shotCode": {
+            "type": "string"
+          },
+          "sequenceId": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "emotion": {
+            "type": "string"
+          },
+          "coverageRole": {
+            "type": "string"
+          },
+          "cameraBody": {
+            "type": "string"
+          },
+          "captureFormat": {
+            "type": "string"
+          },
+          "lensFamily": {
+            "type": "string"
+          },
+          "lensMm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "aperture": {
+            "type": "string"
+          },
+          "cameraHeightM": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cameraSupport": {
+            "type": "string"
+          },
+          "cameraMoveStart": {
+            "type": "string"
+          },
+          "cameraMoveEnd": {
+            "type": "string"
+          },
+          "blocking": {
+            "type": "string"
+          },
+          "screenDirection": {
+            "type": "string"
+          },
+          "axisOfAction": {
+            "type": "string"
+          },
+          "eyelineNotes": {
+            "type": "string"
+          },
+          "composition": {
+            "type": "string"
+          },
+          "focusPlan": {
+            "type": "string"
+          },
+          "startFrameDescription": {
+            "type": "string"
+          },
+          "endFrameDescription": {
+            "type": "string"
+          },
+          "captureFps": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "shutterAngleDeg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "imageAltPrompt": {
+            "type": "string"
+          },
+          "videoAltPrompt": {
+            "type": "string"
+          },
+          "videoNegativePrompt": {
+            "type": "string"
+          },
+          "continuityFlags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "referenceSelections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "assetId": {
+                  "type": "string"
+                },
+                "referenceId": {
+                  "type": "string"
+                },
+                "angleId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "seedNotes": {
+            "type": "string"
+          },
+          "qa": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "technicalNotes": {
+                "type": "string"
+              },
+              "creativeNotes": {
+                "type": "string"
+              },
+              "continuityNotes": {
+                "type": "string"
+              },
+              "reviewer": {
+                "type": "string"
+              }
+            }
+          },
+          "modelOverrides": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "modelProfileId": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "negativePrompt": {
+                  "type": "string"
+                },
+                "editInstructions": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [],
+                  "properties": {}
+                },
+                "referenceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
           "id": {
             "type": "string"
           },
@@ -1325,6 +2513,67 @@
                     "url"
                   ],
                   "properties": {
+                    "modelProfileId": {
+                      "type": "string"
+                    },
+                    "seed": {
+                      "type": "string"
+                    },
+                    "promptHash": {
+                      "type": "string"
+                    },
+                    "referenceIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "durationS": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fps": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "width": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "height": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "qaStatus": {
+                      "type": "string"
+                    },
+                    "parentVersionId": {
+                      "type": "string"
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -1367,6 +2616,67 @@
                     "url"
                   ],
                   "properties": {
+                    "modelProfileId": {
+                      "type": "string"
+                    },
+                    "seed": {
+                      "type": "string"
+                    },
+                    "promptHash": {
+                      "type": "string"
+                    },
+                    "referenceIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "durationS": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fps": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "width": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "height": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "qaStatus": {
+                      "type": "string"
+                    },
+                    "parentVersionId": {
+                      "type": "string"
+                    },
                     "id": {
                       "type": "string"
                     },
@@ -1466,5 +2776,5 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "ASTRA Studio complete project",
-  "description": "Native schemaVersion 1 project file. Cross-reference integrity and runtime are checked by ASTRA on import; see llm_instruction_prompt.md."
+  "description": "Native schemaVersion 2 project file. Cross-reference integrity and runtime are checked by ASTRA on import; see llm_instruction_prompt.md."
 }

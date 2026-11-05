@@ -1,5 +1,117 @@
 {
-  "schemaVersion": 1,
+  "vision": {
+    "statement": "Let a returning visitor change the meaning of a familiar place.",
+    "theme": "Longing and agency",
+    "centralDramaticQuestion": "Will Meera stay or choose to leave?",
+    "visualMetaphor": "Rain gives way to a misted horizon.",
+    "centralImage": "A red umbrella between two people.",
+    "emotionalArc": [
+      "Guarded recognition",
+      "Tentative hope",
+      "Unresolved choice"
+    ],
+    "motifs": [
+      "Red umbrella",
+      "Steam and mist"
+    ],
+    "soundMusicIntent": "Prioritize rain, breath and train ambience over score."
+  },
+  "lookBible": {
+    "cameraLanguage": "Observe at eye level; approach only at emotional turns.",
+    "lensLanguage": "Spherical primes; wider geography, longer isolated reactions.",
+    "movementLanguage": "Restrained motivated dolly moves.",
+    "blockingLanguage": "Keep the umbrella between characters until the choice.",
+    "lightingLanguage": "Amber practical light transitions to cool dawn.",
+    "colorLanguage": "Amber, teal and red continuity.",
+    "textureLanguage": "Naturalistic 35mm grain and wet surfaces.",
+    "pacingLanguage": "Hold reactions and preserve pauses.",
+    "performanceLanguage": "Understated, listening-led performances.",
+    "styleBlock": "Naturalistic intimate drama, motivated light, restrained camera, red umbrella continuity.",
+    "negativeBlock": "No identity drift, arbitrary wardrobe changes or exaggerated expressions."
+  },
+  "sequences": [
+    {
+      "id": "seq_return",
+      "title": "The return and the choice",
+      "order": 1,
+      "act": "Act 1",
+      "sceneIds": [
+        "scn_1",
+        "scn_2"
+      ],
+      "dramaticGoal": "Reopen the relationship without removing Meera’s agency.",
+      "tensionCurve": [
+        2,
+        5,
+        8
+      ],
+      "palette": "Amber to pale blue, red accent",
+      "soundMusicIntent": "Bridge rain into the train horn.",
+      "editingIntent": "Cut on looks; sustain the last reaction.",
+      "plannedDurationS": 60
+    }
+  ],
+  "continuityEvents": [
+    {
+      "id": "event_umbrella",
+      "sceneId": "scn_1",
+      "shotId": "sht_1",
+      "assetType": "props",
+      "assetId": "prp_umbrella",
+      "category": "physical state",
+      "before": "Rain-wet umbrella",
+      "after": "Same umbrella retained",
+      "trigger": "Scene transition",
+      "verificationStatus": "pending"
+    }
+  ],
+  "modelProfiles": [
+    {
+      "id": "model_example_0",
+      "provider": "Configure provider in Connections",
+      "model": "Seedream 5",
+      "version": "Verify with provider",
+      "modality": "image",
+      "mode": "reference image",
+      "parameters": {},
+      "referencePolicy": "Use the approved asset and shot references.",
+      "knownLimits": "Illustrative profile name; provider availability and supported controls must be verified."
+    },
+    {
+      "id": "model_example_1",
+      "provider": "Configure provider in Connections",
+      "model": "Nano Banana Pro",
+      "version": "Verify with provider",
+      "modality": "image",
+      "mode": "reference image",
+      "parameters": {},
+      "referencePolicy": "Use the approved asset and shot references.",
+      "knownLimits": "Illustrative profile name; provider availability and supported controls must be verified."
+    },
+    {
+      "id": "model_example_2",
+      "provider": "Configure provider in Connections",
+      "model": "Seedance 2.5",
+      "version": "Verify with provider",
+      "modality": "video",
+      "mode": "image to video",
+      "parameters": {},
+      "referencePolicy": "Use the approved asset and shot references.",
+      "knownLimits": "Illustrative profile name; provider availability and supported controls must be verified."
+    },
+    {
+      "id": "model_example_3",
+      "provider": "Configure provider in Connections",
+      "model": "Kling 4.0",
+      "version": "Verify with provider",
+      "modality": "video",
+      "mode": "image to video",
+      "parameters": {},
+      "referencePolicy": "Use the approved asset and shot references.",
+      "knownLimits": "Illustrative profile name; provider availability and supported controls must be verified."
+    }
+  ],
+  "schemaVersion": 2,
   "meta": {
     "title": "The Red Umbrella — Complete Example",
     "genres": "Drama, Romance",
@@ -563,6 +675,20 @@
   ],
   "characters": [
     {
+      "idBlock": "Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes",
+      "gestureSignature": "Small restrained hand gestures; deliberate eye contact.",
+      "stateVariants": [
+        {
+          "id": "chr_ravi_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1",
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "chr_ravi",
       "createdAt": 0,
       "updatedAt": 0,
@@ -614,6 +740,20 @@
       "seed": "1234"
     },
     {
+      "idBlock": "Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze",
+      "gestureSignature": "Small restrained hand gestures; deliberate eye contact.",
+      "stateVariants": [
+        {
+          "id": "chr_meera_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1",
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "chr_meera",
       "createdAt": 0,
       "updatedAt": 0,
@@ -667,6 +807,20 @@
   ],
   "environments": [
     {
+      "locBlock": "tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle",
+      "geographyMap": "Maintain established entrance and counter/platform screen geography.",
+      "sunDirection": "Match the scene’s practical or dawn light direction.",
+      "lightingVariants": [
+        {
+          "id": "env_stall_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "env_stall",
       "createdAt": 0,
       "updatedAt": 0,
@@ -713,6 +867,20 @@
       ]
     },
     {
+      "locBlock": "empty small-town railway platform, dawn mist, iron benches",
+      "geographyMap": "Maintain established entrance and counter/platform screen geography.",
+      "sunDirection": "Match the scene’s practical or dawn light direction.",
+      "lightingVariants": [
+        {
+          "id": "env_platform_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "env_platform",
       "createdAt": 0,
       "updatedAt": 0,
@@ -761,6 +929,21 @@
   ],
   "props": [
     {
+      "propBlock": "bright red old umbrella, wooden handle",
+      "dimensions": "Match approved reference proportions.",
+      "physicalState": "Rain-wet, intact, same color and wear throughout.",
+      "stateVariants": [
+        {
+          "id": "prp_umbrella_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1",
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "prp_umbrella",
       "createdAt": 0,
       "updatedAt": 0,
@@ -806,6 +989,20 @@
       "significance": "symbol of their past"
     },
     {
+      "propBlock": "small steaming glass of chai",
+      "dimensions": "Match approved reference proportions.",
+      "physicalState": "Rain-wet, intact, same color and wear throughout.",
+      "stateVariants": [
+        {
+          "id": "prp_glass_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "prp_glass",
       "createdAt": 0,
       "updatedAt": 0,
@@ -852,6 +1049,20 @@
   ],
   "costumes": [
     {
+      "wardrobeBlock": "rain-soaked blue cotton saree",
+      "wearState": "Rain-damp fabric; preserve folds and hem continuity.",
+      "wardrobeChanges": [
+        {
+          "id": "cos_meera_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1",
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "cos_meera",
       "createdAt": 0,
       "updatedAt": 0,
@@ -896,6 +1107,20 @@
       "characterId": "chr_meera"
     },
     {
+      "wardrobeBlock": "faded checked shirt, sleeves rolled",
+      "wearState": "Rain-damp fabric; preserve folds and hem continuity.",
+      "wardrobeChanges": [
+        {
+          "id": "cos_ravi_state",
+          "name": "Continuity baseline",
+          "description": "Preserve the approved reference state in all linked scenes.",
+          "sceneIds": [
+            "scn_1",
+            "scn_2"
+          ],
+          "shotIds": []
+        }
+      ],
       "id": "cos_ravi",
       "createdAt": 0,
       "updatedAt": 0,
@@ -942,6 +1167,48 @@
   ],
   "scenes": [
     {
+      "sequenceId": "seq_return",
+      "scriptPages": "1",
+      "estimatedScreenTimeS": 25,
+      "storyFunction": "Meera returns to Ravi's stall in the rain.",
+      "conflict": "Connection versus departure.",
+      "subtext": "Neither character says everything they mean.",
+      "sceneTurn": "A familiar presence changes the emotional stakes.",
+      "emotionalStart": "Guarded",
+      "emotionalEnd": "Uncertain hope",
+      "tensionScore": 5,
+      "directorIntent": "Keep reactions legible without melodrama.",
+      "weather": "Rain",
+      "sunDirection": "Warm overhead practical",
+      "breakdown": {
+        "speakingCast": [
+          "RAVI",
+          "MEERA"
+        ],
+        "nonSpeakingCast": [],
+        "extras": [],
+        "props": [
+          "Red umbrella",
+          "Tea glass"
+        ],
+        "costumes": [
+          "Meera - wet blue saree",
+          "Ravi - checked shirt"
+        ],
+        "vehicles": [],
+        "animals": [],
+        "setDressing": [],
+        "makeupHair": [],
+        "stunts": [],
+        "practicalSfx": [],
+        "vfx": [],
+        "specialEquipment": [],
+        "lightingSetup": "Match the approved master lighting and practical direction.",
+        "soundMusic": "Rain or platform ambience with clear dialogue.",
+        "productionConstraints": [
+          "Control wet-surface continuity; confirm safe rain effects."
+        ]
+      },
       "id": "scn_1",
       "createdAt": 0,
       "updatedAt": 0,
@@ -967,6 +1234,47 @@
       "productionNotes": "Demonstration media only. Replace references and clips before final approval."
     },
     {
+      "sequenceId": "seq_return",
+      "scriptPages": "1",
+      "estimatedScreenTimeS": 35,
+      "storyFunction": "Meera waits; Ravi runs to her.",
+      "conflict": "Connection versus departure.",
+      "subtext": "Neither character says everything they mean.",
+      "sceneTurn": "A familiar presence changes the emotional stakes.",
+      "emotionalStart": "Guarded",
+      "emotionalEnd": "Uncertain hope",
+      "tensionScore": 8,
+      "directorIntent": "Keep reactions legible without melodrama.",
+      "weather": "Dawn mist",
+      "sunDirection": "Cool dawn backlight",
+      "breakdown": {
+        "speakingCast": [
+          "RAVI",
+          "MEERA"
+        ],
+        "nonSpeakingCast": [],
+        "extras": [],
+        "props": [
+          "Red umbrella"
+        ],
+        "costumes": [
+          "Meera - wet blue saree",
+          "Ravi - checked shirt"
+        ],
+        "vehicles": [],
+        "animals": [],
+        "setDressing": [],
+        "makeupHair": [],
+        "stunts": [],
+        "practicalSfx": [],
+        "vfx": [],
+        "specialEquipment": [],
+        "lightingSetup": "Match the approved master lighting and practical direction.",
+        "soundMusic": "Rain or platform ambience with clear dialogue.",
+        "productionConstraints": [
+          "Control wet-surface continuity; confirm safe rain effects."
+        ]
+      },
       "id": "scn_2",
       "createdAt": 0,
       "updatedAt": 0,
@@ -994,6 +1302,55 @@
   ],
   "shots": [
     {
+      "shotCode": "S1-01",
+      "sequenceId": "seq_return",
+      "purpose": "Rain on the stall, Ravi wipes glasses",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Master",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 24,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Dolly",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Rain on the stall, Ravi wipes glasses",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Rain on the stall, Ravi wipes glasses",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic WS still, Eye level, 24mm, Rain on the stall, Ravi wipes glasses. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. small steaming glass of chai. faded checked shirt, sleeves rolled. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "8 seconds at 24 fps. WS, 24mm, Slow push-in. Rain on the stall, Ravi wipes glasses. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic WS still, Eye level, 24mm, Rain on the stall, Ravi wipes glasses. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. small steaming glass of chai. faded checked shirt, sleeves rolled. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_1",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1041,6 +1398,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_1_image_demo",
             "url": "data:image/png;base64,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",
             "createdAt": 0,
@@ -1052,6 +1419,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_1_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
@@ -1065,6 +1442,55 @@
       "lockedFields": []
     },
     {
+      "shotCode": "S1-02",
+      "sequenceId": "seq_return",
+      "purpose": "Meera enters with the red umbrella",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Reaction",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 35,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Tripod",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Meera enters with the red umbrella",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Meera enters with the red umbrella",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic MS still, Eye level, 35mm, Meera enters with the red umbrella. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "10 seconds at 24 fps. MS, 35mm, Static. Meera enters with the red umbrella. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic MS still, Eye level, 35mm, Meera enters with the red umbrella. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_2",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1118,6 +1544,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_2_image_demo",
             "url": "data:image/png;base64,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",
             "createdAt": 0,
@@ -1129,6 +1565,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_2_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
@@ -1142,6 +1588,55 @@
       "lockedFields": []
     },
     {
+      "shotCode": "S1-03",
+      "sequenceId": "seq_return",
+      "purpose": "Ravi freezes",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Reaction",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 85,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Tripod",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Ravi freezes",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Ravi freezes",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic CU still, Eye level, 85mm, Ravi freezes. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. faded checked shirt, sleeves rolled. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "7 seconds at 24 fps. CU, 85mm, Static. Ravi freezes. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic CU still, Eye level, 85mm, Ravi freezes. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. faded checked shirt, sleeves rolled. tiny roadside tea stall, tin roof, rain, hanging bulb, steam from kettle. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_3",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1189,6 +1684,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_3_image_demo",
             "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABaCAYAAAA/xl1SAAAK/ElEQVR4AexbCVRURxa97YkmLnGJetSIyxB3TTQRNC7jglGU6EBcgorigisooiAGRowKA+IWBhD3uEcJMeqImAGNxHHHLUaNGnU0oILLjCJqBiPOf3Xmt9093QLdLfT//Ti86vr16lW9d9/tX7//qSpTq63LcxbGoLQ4UAb8xwiUIgJMwFIEn6cGmIDMglJFgAlYqvDz5EYJ6OzwH/h2yGNhDKzGAeKUsa+bcQLWewpnh3xj/dXTxpGUGALOdfPhLHHK2IRGCUgdM7LKIeFwJRbGwGIOEJeIU8bEJAGNdeY2RsDaCDABrY0oj1csBJiAxYKLO1sbASagtRHl8YqFABOwWHCporNNBcEEtKl02J8zTED7y7lNRcwEtKl02J8zTED7y7lNRcwEtKl02J8zTED7y7lNRVyiBLSpyNkZm0CACWgTabBfJ5iA9pt7m4icCWgTabBfJ5iA9pt7m4icCWgTabBfJ5iAJZJ7nsQUAkxAU8hwe4kgYBYBGzjUwY2jaUhZuwTfrU9AeuJqRARNQqWKFYTTunrqI0uY/zihP7ZjI7bER4u6XJDt1QO7xDhy20C3ntizabmYY+fqWCwOCwKNLevlT2qT/aG59m1ZiV1r4tCuTSvRxVBPfUh0/SEbapPFz9tTzKU7rqyT7RIiQpGx8yuBA+mObN+A8CA/aDQaMS/FaTjupr9GCZ33gH7IOpKK1s2biGsqmr3TEOlbVlFVSP/ePUT8qRuXIU2SBaFTUbtmDaEznJvmJ3Gs7yD0SinMIiAFl/f4MdxG+qG3ty88xgagqWMDrJw3i1RCZD31kSU8doXQUVGvTm3UqlGdqkII7EePnog6Fe49u2HOtImYHvmFmKOfjz+ePv0dSQkLUaH8GzD8052v++CxiFu3BSuiwrTddPXG/JkeGSPikXVL1icK28LsNm1P0dq5Dp+I5o0cMW7oAGFLheG4XlNCqFlIVnYOomZMEXXDone3TogMnozPomPRa9gEDJ40A9WrVcWS8Bf2unPLfl/9NctwKJu+NpuAulHdz32IcSHheL9lM7R9t4WuymT90InT8OzbS6snwu09dEx7Pd5rEGJWb8Kpcxe0baELYlFQUIC+Pbpo20xVvks/iIrly6N+3Tqmuli9/cHDPBw6fhrvNWtcpLEPSn0LCp5h1CD3/+s/wWsg6Etw/Mw5obt3/wEmzYrCjHkx4lothVUISGD8+0Euzvx8CS2bvEOXL5Xnz4Ftf/8eHq4uoh/dCd+qWhlXrmeKayoaOryNAxmnqKqVZ88KcOKn89LdtqG2zVSlV5cOePTkCW5IdxlTfazdTo8RnZza4PS5i4UO/VwCQaPRIDgqBoHjvFG9ahU9m/pv18HB4/rxP37yGy5fe4GRnoFCL6xGQIr/t/x8vF62LFVR5c1KyD6+V0+8PNyEjopL//wVlARasoa490HKvgPUrJVyZV/T1otSMZxv2pjhGDNjLoi0ZG+oJ990/Un+MlbP18kjh5BZoXF8NnGU1u5s6lacOPszViVuE7ZUGI4bO3sGNYvnRI1Gg/O/XEXy3v0ImzJetMtF2dcKj193born0LfrZHOb+SzMEasRUKPRoFWTRjj5vyWTlqPaTj2gK/TMQg5JXVGmjAZ/S0vHUI8+6CM97yTtSiOVVq7fuIXOzu9rr+UKLfF0p5Wv5U/d+ebELEc56YtAd0tjetkn2R/q03e0v56vcWs3UzN0xzVmN2/pGmHXuNufcD83Fz+evyi+WMJYKgzH9Z8dLbXq/0ctWQ2XDs5o1fTF0n0t6yY6O+nH/8br5TCgz0daY3lu2a+O/UdodUqplLGGozXeqiYemPcfOymWyKKOmZiciq7t24KWFgJc127d1p0I8PESz5XUTs9yK6QfOZk3s7EjLZ2aTMrSjV8j/+lTBI71NtnH2oqHeY8Q9JfFmCf9qKhWpXKxhieSRy9bgyBpKZYNKX66C3ds21o0Va38JuLnhsDH00Ncq6Uwm4CVKlQQrx/oFcGJ5M3ijhMYsVCLi6xPkV7VyLJuUbhWT5XsO3eRc+cedqfrL7+kWy8RMDJ+FUL9fLB73RKsXxyBXOkhf3TwbFIXKlOkOw39GqVf59S5KP5QP0Mpjt2eA0ex73CG9MvWXzvMgtAAgZOMAX061K6l1csVuhsTEeXrb1LSEDI/DvQoQa+6TqUk4vdnzzAq6HO5C7ykRxoaT1f6fdRVq1dCxSwCXs+6hbrte8JNeg1DrwgadOyNwIhF2uctXT31kWVEYJjApJ37MNy++y9RH+Q7HSu+2irqcdKyN3NhvKhTQUkhfZ8Rfujm6SPuMHSnIZ2u0HxNu7vrNuHi1etoIi2L9El62V/ZF/rU9Uf+tak7SGF2vjMjpV/qG3VNQEvshNAI0UZx0ishmktX6PULfcGmzl0g+smFq/Qap9vgMfIliIQDJwaJ11B/6OwGGjfn7j2hp7md+w0VOXCT8iDLzj0/CL1SCrMIqJTg2E/bR4AJaPs5UrWH6iWgqtOmnuCYgOrJpSIjYQIqMm3qcZoJqJ5cKjISJqAi06Yep5mA6smlIiNhAioybS91WlFKJqCi0qU+Z5mA6supoiKyKgHHDhmAAJ9higKAnS1dBMwiIG2WpENI3y5fjKSEBaBdLoY7el8W1getmmOWwQZM2ueXGD9f7HyhQ04tGju+bAjWqQQBswjYvaMzalavhv7jp4F2q2zYlixOkBEmzu+1BBFpY0ykOI9B29RnTh6L+SEBWP9FBBo1rIfRn7qjfZtW2lNrZEcSEb8StPPlhyPH4SSNQ20s6kbALAKeu3QFtWtWB20vp2X30IkfcfLsBYEUncHwnBQsDhO5dumIvi5/BJ3UCo6Kwe59BzDM42P849gpHD19FsckEUZSQbuX7z/IxfKoMDg2cMDmHbulVv5XOwJmEfBG9m186jsdyd/vx+2797AlLhq9unQAgXXz9l36QG7eI1SsUB4fftAaN3PuiLbsO/fEnVNcGCkyb+WIPW8Xr1wTGzGNdOEmlSFgFgHdunfGJ64uSN1/WGyPT0pJQ9f2TkahoTsibacnpWP9uqCzHlQ3lBA/H3E8kQ4qZd7KNnr219CGr5WPgFkEPHzyDIb374tvli0CPdfR4aGlG742igbtdnZ6twViPg+WbPqJpfX85atwlZZnL48Xp+SSdqXCpVM7pKyNh4/nJ/gyabvR8bhRXQiYRUA6A/zxqMkYOCEQ3lNnYnxIOLKyc7By81btFnW5Tucc/GdHI2DOfLGtPlNaZn+68As6DRgB2nIvw3n5WiaGB/wZbiMnocug0aDt8LKOP9WLgFkEVC8cHFlJI8AELGnEeT49BJiAenCYe8F25iLABDQXObazCgJMQKvAyIOYiwAT0Fzk2M4qCDABrQIjD2IuAkxAc5FjO6sgwAS0Coz2O4ilkTMBLUWQ7S1CgAloEXxsbCkCTEBLEWR7ixBgAloEHxtbigAT0FIE2d4iBJiAFsHHxpYioFwCWho529sEAkxAm0iD/TrBBLTf3NtE5ExAm0iD/TrBBLTf3NtE5ExAm0iD/TrBBFRe7lXlMRNQVelUXjBMQOXlTFUeMwFVlU7lBcMEVF7OVOUxE1BV6VReMExA5eVMVR6bJKBz3Xz4fpinJ3zNeJjDAWeHfJNfGqMEzMgsi4wb5QANwAIwBoAlGBCXiFMw8mecgFmvI+FwJRbGwGocyJA4ZYR/MEpAYx25jRF4FQgwAV8FqjxmkRFgAhYZKu74KhBgAhYJVe70qhD4LwAAAP//VpGKigAAAAZJREFUAwAJSlYNJDeqnQAAAABJRU5ErkJggg==",
             "createdAt": 0,
@@ -1200,6 +1705,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_3_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
@@ -1213,6 +1728,55 @@
       "lockedFields": []
     },
     {
+      "shotCode": "S1A-01",
+      "sequenceId": "seq_return",
+      "purpose": "Meera alone on the misty platform",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Reaction",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 100,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Tripod",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Meera alone on the misty platform",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Meera alone on the misty platform",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic EWS still, High, 100mm, Meera alone on the misty platform. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "12 seconds at 24 fps. EWS, 100mm, Static. Meera alone on the misty platform. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic EWS still, High, 100mm, Meera alone on the misty platform. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_4",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1260,6 +1824,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_4_image_demo",
             "url": "data:image/png;base64,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",
             "createdAt": 0,
@@ -1271,6 +1845,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_4_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
@@ -1284,6 +1868,55 @@
       "lockedFields": []
     },
     {
+      "shotCode": "S1A-02",
+      "sequenceId": "seq_return",
+      "purpose": "Ravi runs onto the platform",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Reaction",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 35,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Dolly",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Ravi runs onto the platform",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Ravi runs onto the platform",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic MS still, Low, 35mm, Ravi runs onto the platform. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. faded checked shirt, sleeves rolled. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "9 seconds at 24 fps. MS, 35mm, Handheld run. Ravi runs onto the platform. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic MS still, Low, 35mm, Ravi runs onto the platform. Indian man mid 30s, stubble, rolled-up checked shirt, tired kind eyes. faded checked shirt, sleeves rolled. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_5",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1331,6 +1964,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_5_image_demo",
             "url": "data:image/png;base64,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",
             "createdAt": 0,
@@ -1342,6 +1985,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_5_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
@@ -1355,6 +2008,55 @@
       "lockedFields": []
     },
     {
+      "shotCode": "S1A-03",
+      "sequenceId": "seq_return",
+      "purpose": "Meera turns",
+      "emotion": "Guarded empathy",
+      "coverageRole": "Reaction",
+      "cameraBody": "Planned cinema camera; confirm rental",
+      "captureFormat": "Super 35",
+      "lensFamily": "Spherical primes",
+      "lensMm": 50,
+      "aperture": "T2.8",
+      "cameraHeightM": 1.5,
+      "cameraSupport": "Dolly",
+      "cameraMoveStart": "Established eyeline position",
+      "cameraMoveEnd": "Hold the reaction without crossing the axis",
+      "blocking": "Meera turns",
+      "screenDirection": "Maintain established screen direction",
+      "axisOfAction": "Line between the two principal characters",
+      "eyelineNotes": "Match gaze height in reverse coverage.",
+      "composition": "Maintain negative space toward the other character.",
+      "focusPlan": "Hold the speaking or reacting character in focus.",
+      "startFrameDescription": "Meera turns",
+      "endFrameDescription": "Settle into the final reaction before the cut.",
+      "captureFps": 24,
+      "shutterAngleDeg": 180,
+      "imageAltPrompt": "Cinematic MCU still, Eye level, 50mm, Meera turns. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+      "videoAltPrompt": "14 seconds at 24 fps. MCU, 50mm, Slow dolly in. Meera turns. Begin from the approved image; preserve character identity, wardrobe, prop placement and screen direction. Natural rain or mist movement, stable exposure, no morphing or unintended cuts.",
+      "videoNegativePrompt": "No temporal identity drift, morphing, flicker or unintended cuts.",
+      "continuityFlags": [
+        "Preserve umbrella color and wardrobe state"
+      ],
+      "referenceSelections": [],
+      "seedNotes": "Record the actual provider seed when generating.",
+      "qa": {
+        "status": "pending",
+        "technicalNotes": "Check focus and exposure.",
+        "creativeNotes": "Check restrained performance.",
+        "continuityNotes": "Compare approved references.",
+        "reviewer": ""
+      },
+      "modelOverrides": [
+        {
+          "modelProfileId": "model_example_0",
+          "prompt": "Cinematic MCU still, Eye level, 50mm, Meera turns. Indian woman late 20s, wet hair, simple blue cotton saree, determined gaze. bright red old umbrella, wooden handle. rain-soaked blue cotton saree. empty small-town railway platform, dawn mist, iron benches. Preserve wardrobe, prop positions and screen direction; 2.39:1 composition; naturalistic 35mm grain.",
+          "negativePrompt": "identity drift, inconsistent umbrella color, duplicate limbs, extra people, text, watermark, oversharpening",
+          "editInstructions": "Preserve identity and geography.",
+          "parameters": {},
+          "referenceIds": []
+        }
+      ],
       "id": "sht_6",
       "createdAt": 0,
       "updatedAt": 0,
@@ -1408,6 +2110,16 @@
       "image": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_6_image_demo",
             "url": "data:image/png;base64,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",
             "createdAt": 0,
@@ -1419,6 +2131,16 @@
       "video": {
         "versions": [
           {
+            "modelProfileId": "",
+            "seed": "",
+            "promptHash": "",
+            "referenceIds": [],
+            "durationS": null,
+            "fps": null,
+            "width": null,
+            "height": null,
+            "qaStatus": "",
+            "parentVersionId": "",
             "id": "sht_6_video_demo",
             "url": "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAARnEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggRR7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjEuNy4xMDNXQYxMYXZmNjEuNy4xMDNEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIFIZFnF/wKa6cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4QCe8hq4JCwgaC6gVqagQJVsIRVuYEBElTDZ/tzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYxLjcuMTAzc3PWY8CLY8WIFIZFnF/wKa5nyKFFo4dFTkNPREVSRIeUTGF2YzYxLjE5LjEwMSBsaWJ2cHhnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAxLjAwMDAwMDAwMAAfQ7Z1QqjngQCjz4EAAICwBQCdASqgAFoAAEcIhYWIhYSIAgICdaoCBnmWpOevRl4jnr0ZeI569GXiOevRl4jnr0ZeI5QA/v7rvL+4Mz6uxw/+Ur92XpJ0eACjmIEAKgARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQBTABECAAEQEAAYABhYL/QACICBAAAAo5iBAH0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEApwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQDQABECAAEQEAAYABhYL/QACICBAAAAo5iBAPoAEQIAARAQABgAGFgv9AAIgIEAAACjl4EBJADxAQABEBAUYABhYL/QACICBAAAo5iBAU0AEQIAARAQABgAGFgv9AAIgIEAAACjmIEBdwARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQGhABECAAEQEAAYABhYL/QACICBAAAAo5iBAcoAEQIAARAQABgAGFgv9AAIgIEAAACjmIEB9AARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQIeABECAAEQEAAYABhYL/QACICBAAAAo5iBAkcAEQIAARAQABgAGFgv9AAIgIEAAACjmIECcQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQKbABECAAEQEAAYABhYL/QACICBAAAAo5iBAsQAEQIAARAQABgAGFgv9AAIgIEAAACjl4EC7gDxAQABEBAUYABhYL/QACICBAAAo5iBAxgAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDQQARAgABEBAAGAAYWC/0AAiAgQAAAKOYgQNrABECAAEQEAAYABhYL/QACICBAAAAo5iBA5UAEQIAARAQABgAGFgv9AAIgIEAAACjmIEDvgARAgABEBAAGAAYWC/0AAiAgQAAABxTu2uRu4+zgQC3iveBAfGCAaPwgQM=",
             "createdAt": 0,
