@@ -62,10 +62,43 @@ async function asMonitorJob(run) {
     started = Date.now();
   while (Date.now() - started < timeout) {
     signal.throwIfAborted();
-    const response = await fetch(
-      base + "/history/" + encodeURIComponent(job.remoteId),
-      { signal },
-    );
+    let response;
+    try {
+      response = await fetch(
+        base + "/history/" + encodeURIComponent(job.remoteId),
+        { signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]) },
+      );
+      if (response.status >= 500) throw Error("HTTP " + response.status);
+    } catch (e) {
+      if (signal.aborted) throw e;
+      asPipelineRuntime.waiting = true;
+      asPipelineNotify();
+      const deadline = Date.now() + asHardware().giveUpSeconds * 1000;
+      let retry = 0;
+      while (Date.now() < deadline) {
+        await asPipelineDelay(
+          Math.min(15000, 500 * 2 ** Math.min(retry++, 5)),
+          signal,
+        );
+        try {
+          response = await fetch(
+            base + "/history/" + encodeURIComponent(job.remoteId),
+            { signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]) },
+          );
+          if (response.ok) break;
+        } catch (error) {
+          if (signal.aborted) throw error;
+        }
+      }
+      asPipelineRuntime.waiting = false;
+      asPipelineNotify();
+      if (!response?.ok)
+        throw Error(
+          "ComfyUI unreachable past recovery deadline. Resume monitoring prompt " +
+            job.remoteId +
+            "; do not submit a replacement.",
+        );
+    }
     if (!response.ok) throw Error("ComfyUI history HTTP " + response.status);
     const entry = (await response.json())[job.remoteId];
     if (
@@ -109,25 +142,7 @@ async function asMonitorJob(run) {
     K.getState().patchJob(id, {
       log: "Still running on ComfyUI; monitoring " + job.remoteId,
     });
-    await new Promise((resolve, reject) => {
-      const timer = setTimeout(done, 2000);
-      function done() {
-        signal.removeEventListener("abort", abort);
-        resolve();
-      }
-      function abort() {
-        clearTimeout(timer);
-        signal.removeEventListener("abort", abort);
-        reject(
-          new DOMException(
-            "Cancelled locally; remote work may continue",
-            "AbortError",
-          ),
-        );
-      }
-      signal.addEventListener("abort", abort, { once: true });
-      if (signal.aborted) abort();
-    });
+    await asPipelineDelay(2000, signal);
   }
   throw Error(
     "Monitoring timed out. The remote job may still be running; Resume monitoring will reconnect without submitting a duplicate.",

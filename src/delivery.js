@@ -297,16 +297,20 @@ async function asDeliveryWrite(root, path, source, signal, onBytes = () => {}) {
     exists = false;
   }
   const { dir, name, handle } = await asDeliveryFile(root, path, true);
-  let w;
+  let w,
+    writtenBytes = 0;
   try {
     w = await handle.createWritable();
     for await (const chunk of asDeliveryChunks(source)) {
       signal?.throwIfAborted();
       await w.write(chunk);
+      writtenBytes += chunk.length;
       onBytes(chunk.length);
     }
     signal?.throwIfAborted();
     await w.close();
+    if ((await handle.getFile()).size !== writtenBytes)
+      throw Error("Write verification failed: byte size differs");
   } catch (e) {
     await w?.abort().catch(() => {});
     if (!exists) await dir.removeEntry(name).catch(() => {});
@@ -507,7 +511,12 @@ function asDeliveryDestination() {
 }
 async function asDeliveryRun(
   entries,
-  { project = G.getState().project, destination, scope = "single" } = {},
+  {
+    project = G.getState().project,
+    destination,
+    scope = "single",
+    rootOverride,
+  } = {},
 ) {
   await asDelivery.ready;
   if (asDelivery.busy) throw Error("Another export is running");
@@ -544,12 +553,18 @@ async function asDeliveryRun(
         projectSlug + (settings.layout === "timestamp" ? "_" + stamp : "");
     const rootKey = "astra-export-incomplete:" + projectSlug + ":" + scope;
     let rootName =
-      destination === "folder" && settings.layout === "timestamp"
+      rootOverride ||
+      (destination === "folder" && settings.layout === "timestamp"
         ? (await Wo(rootKey)) || freshRoot
-        : freshRoot;
+        : freshRoot);
     if (destination === "folder") await Go(rootKey, rootName);
     const manifest = {
-      appVersion: "ASTRA-delivery-1",
+      appVersion: "ASTRA-pipeline-4",
+      simulation:
+        !!project.pipeline?.simulation ||
+        (project.shots || []).some((s) =>
+          s.video?.versions.some((v) => v.source === "SIMULATION"),
+        ),
       createdAt: new Date().toISOString(),
       projectTitle: project.meta.title,
       scope,

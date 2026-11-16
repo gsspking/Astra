@@ -40,14 +40,14 @@ async function asProductionSave(change, label = "production") {
     .then(async () => {
       if (Kl.getState().activeId !== id) throw Error("Active project changed");
       const original = G.getState().project;
-      if (original.schemaVersion !== 3) {
+      if (original.schemaVersion < 3) {
         await asWriteStored("astra-pre-v3-" + id, original);
         G.getState().snapshot("Before production schema v3 migration");
       }
       G.getState().set(
         (p) => ({
           ...p,
-          schemaVersion: 3,
+          schemaVersion: Math.max(3, p.schemaVersion || 3),
           production: change(asProduction(p)),
         }),
         label,
@@ -88,7 +88,17 @@ function asProductionOrdered(p) {
 function asProductionSelect(p, settings) {
   return asProductionOrdered(p).filter(
     (s) =>
-      settings.scope !== "selected" || settings.sceneIds.includes(s.sceneId),
+      !s.lockedFields?.includes("*") &&
+      !asProduction(p).shots[s.id]?.locked &&
+      (settings.scope !== "selected" ||
+        settings.sceneIds.includes(s.sceneId)) &&
+      (settings.scope !== "qc" ||
+        Object.values(asProduction(p).shots[s.id]?.qc || {}).some(
+          (q) => q.flags?.length,
+        )) &&
+      (settings.scope !== "failed" ||
+        asProduction(p).batch?.failures?.some((f) => f.shotId === s.id)) &&
+      (settings.scope !== "stale" || asPipelineData(p).stages[4]?.stale),
   );
 }
 const asServerSlots = new Map();
@@ -220,6 +230,35 @@ function asProductionPlan(p, settings = asProduction(p).settings) {
         p.modelProfiles.find((m) => m.id === settings.modelProfileId)
           ?.parameters?.pricePerGeneration,
       ) || 0;
+  if (!settings.chain)
+    tasks.sort(
+      (a, b) =>
+        ["references", "keyframes", "videos"].indexOf(a.stage) -
+        ["references", "keyframes", "videos"].indexOf(b.stage),
+    );
+  if (settings.chain) {
+    const sceneOrder = new Map(p.scenes.map((s, i) => [s.id, i])),
+      sceneOf = (task) =>
+        p.shots.find((s) => s.id === task.target.shotId)?.sceneId;
+    tasks.sort((a, b) =>
+      a.stage === "references"
+        ? -1
+        : b.stage === "references"
+          ? 1
+          : (sceneOrder.get(sceneOf(a)) || 0) -
+              (sceneOrder.get(sceneOf(b)) || 0) ||
+            ["keyframes", "videos"].indexOf(a.stage) -
+              ["keyframes", "videos"].indexOf(b.stage),
+    );
+  }
+  if (settings.stageFilter) {
+    const selected = tasks.filter((t) =>
+      settings.stageFilter === "continuity"
+        ? ["keyframes", "videos"].includes(t.stage)
+        : t.stage === settings.stageFilter,
+    );
+    tasks.splice(0, tasks.length, ...selected);
+  }
   return {
     tasks,
     jobs: tasks.length,
@@ -229,8 +268,12 @@ function asProductionPlan(p, settings = asProduction(p).settings) {
   };
 }
 async function asProductionHealth(p, settings, plan) {
+  if (asSimulationOn())
+    return { problems: [], disk: await navigator.storage?.estimate?.() };
   const problems = [],
-    server = K.getState().comfy.find((s) => s.id === settings.serverId);
+    server =
+      K.getState().comfy.find((s) => s.id === settings.serverId) ||
+      (asSimulationOn() ? { id: "simulation", url: "" } : null);
   for (const kind of new Set(plan.tasks.map((t) => t.kind))) {
     const workflow = K.getState().workflows.find(
       (w) =>
@@ -280,6 +323,17 @@ async function asProductionHealth(p, settings, plan) {
       "Selected model does not support project FPS " + p.meta.frameRate,
     );
   const disk = await navigator.storage?.estimate?.();
+  if (
+    asHardware().manualFreeGB > 0 &&
+    plan.bytes / 1e9 > asHardware().manualFreeGB
+  )
+    problems.push(
+      "Estimated export exceeds manually supplied drive free space. Free disk space or reduce scope, then update Hardware.",
+    );
+  if (disk && disk.quota - disk.usage < plan.bytes)
+    problems.push(
+      "Estimated generated media exceeds available browser storage quota. Free storage or reduce scope.",
+    );
   return { problems: [...new Set(problems)], disk };
 }
 const asBatch = {
@@ -318,8 +372,16 @@ async function asProductionGenerate(task, settings) {
           ]) ||
           settings[task.kind === "image" ? "workflowImage" : "workflowVideo"]),
     ),
-    server = K.getState().comfy.find((s) => s.id === settings.serverId);
-  if (!workflow || !server) throw Error("Configure a workflow and server");
+    server =
+      K.getState().comfy.find((s) => s.id === settings.serverId) ||
+      (asSimulationOn() ? { id: "simulation", url: "" } : null);
+  if ((!workflow || !server) && !asSimulationOn())
+    throw Error("Configure a workflow and server");
+  if (shot) {
+    const errors = asPromptLint(shot, p).filter((i) => i.severity === "error");
+    if (errors.length)
+      throw Error("Invalid prompt: " + errors.map((i) => i.message).join("; "));
+  }
   const refs = shot ? il(p, shot) : [];
   let ref =
     task.stage === "post"
@@ -356,7 +418,8 @@ async function asProductionGenerate(task, settings) {
   }
   const before = new Set(K.getState().jobs.map((j) => j.id)),
     start = Date.now();
-  const generationTask = F_({
+  asPipelineRuntime.comfyUsed = true;
+  const generationTask = (asSimulationOn() ? asSimulationGenerate : F_)({
     ...task,
     workflow,
     server,
@@ -449,12 +512,10 @@ async function asProductionGenerate(task, settings) {
 async function asProductionRun(settings) {
   if (asBatch.active) throw Error("A production batch is already running");
   let p = G.getState().project;
-  if (!p.shots.length) {
-    const next = sl(p);
-    G.getState().replace(next, "Before automatic script breakdown");
-    await Ul();
-    p = G.getState().project;
-  }
+  if (!p.shots.length)
+    throw Error(
+      "Run Analyze script first with an active LLM, or explicitly choose Offline parser in Pipeline.",
+    );
   const plan = asProductionPlan(p, settings),
     health = await asProductionHealth(p, settings, plan);
   if (health.problems.length) throw Error(health.problems.join("\n"));
@@ -464,6 +525,8 @@ async function asProductionRun(settings) {
     stop: false,
     controller: new AbortController(),
     done: 0,
+    succeeded: 0,
+    skipped: 0,
     total: plan.jobs,
     failures: [],
   });
@@ -479,32 +542,31 @@ async function asProductionRun(settings) {
       asBatch.current = task.label;
       asBatchNotify();
       let succeeded = false;
-      for (let attempt = 0; attempt < settings.attempts; attempt++) {
-        await asBatchCheckpoint();
-        try {
-          await asProductionGenerate(
-            { ...task, retry: attempt > 0 },
-            {
-              ...settings,
-              seed: attempt ? "" : settings.seed,
-            },
-          );
-          succeeded = true;
-          break;
-        } catch (e) {
-          if (asBatch.controller.signal.aborted) throw e;
-          if (attempt + 1 === settings.attempts)
-            asBatch.failures.push({ task: task.label, reason: e.message });
-          else {
-            asBatch.current = task.label + " retry " + (attempt + 2);
-            asBatchNotify();
-            await new Promise((r) =>
-              setTimeout(r, Math.min(30000, 1000 * 2 ** attempt)),
-            );
-          }
-        }
+      try {
+        await asExecuteProductionTask(
+          task,
+          settings,
+          asBatch.controller.signal,
+        );
+        succeeded = true;
+      } catch (e) {
+        if (
+          asBatch.controller.signal.aborted ||
+          asErrorClass(e) === "cancelled"
+        )
+          throw e;
+        if (asErrorClass(e) === "storage") throw e;
+        asBatch.failures.push({
+          task: task.label,
+          taskSpec: task,
+          shotId: task.target.shotId,
+          reason: e.message,
+        });
       }
-      asBatch.done++;
+      if (succeeded) {
+        asBatch.succeeded++;
+        asBatch.done = asBatch.succeeded + asBatch.skipped;
+      }
       if (succeeded && task.kind === "video") {
         const shot = G.getState().project.shots.find(
           (s) => s.id === task.target.shotId,
@@ -549,7 +611,22 @@ async function asProductionRun(settings) {
         done: asBatch.done,
         total: asBatch.total,
         failures: asBatch.failures,
-        finished: asBatch.done === asBatch.total,
+        succeeded: asBatch.succeeded,
+        skipped: asBatch.skipped,
+        remaining: Math.max(
+          0,
+          asBatch.total -
+            asBatch.succeeded -
+            asBatch.skipped -
+            asBatch.failures.length,
+        ),
+        finished:
+          asBatch.done === asBatch.total && asBatch.failures.length === 0,
+        status: asBatch.failures.length
+          ? "Finished with " + asBatch.failures.length + " failures"
+          : asBatch.done === asBatch.total
+            ? "Finished"
+            : "Stopped",
       },
     }));
   } finally {
@@ -662,7 +739,11 @@ async function asProductionQC(shotId, versionId) {
     });
     const width = video ? media.videoWidth : media.naturalWidth,
       height = video ? media.videoHeight : media.naturalHeight,
-      duration = video ? media.duration : null,
+      duration = video
+        ? Number.isFinite(media.duration)
+          ? media.duration
+          : version.durationS || null
+        : null,
       canvas = document.createElement("canvas");
     canvas.width = canvas.height = 32;
     const c = canvas.getContext("2d", { willReadFrequently: true });
@@ -670,7 +751,10 @@ async function asProductionQC(shotId, versionId) {
       if (video)
         await new Promise((r) => {
           media.onseeked = r;
-          media.currentTime = Math.max(0.001, media.duration * fraction);
+          media.currentTime = Math.max(
+            0.001,
+            (duration || shot.duration) * fraction,
+          );
         });
       c.drawImage(media, 0, 0, 32, 32);
       const pixels = c.getImageData(0, 0, 32, 32).data,
@@ -894,6 +978,17 @@ async function asEditTimeline(p) {
   return { fps, clips, frames: cursor, state };
 }
 async function* asEditFiles(p) {
+  if (p.pipeline?.morningReport)
+    yield {
+      path: "07_Reports/morning_report.md",
+      open: () => asRedact(p.pipeline.morningReport),
+    };
+  if (asPipelineRuntime.log.length)
+    yield {
+      path: "07_Reports/run_log.jsonl",
+      open: () => asPipelineRuntime.log.map((e) => asRedact(e)).join("\n"),
+    };
+
   const { fps, clips, frames, state } = await asEditTimeline(p),
     seconds = (f) => (f * fps.den) / fps.num,
     rat = (f) => `${Math.round(f) * fps.den}/${fps.num}s`,
@@ -1190,6 +1285,32 @@ async function asAudioAdapter(apiId, variables) {
   return asMediaPut(blob);
 }
 async function asAudioLine(shotId, index) {
+  if (asSimulationOn()) {
+    await asPipelineDelay(K.getState().simulation?.latencyMs || 20);
+    asSimulationFailure("audio");
+    const data = new Uint8Array(44 + 1600),
+      view = new DataView(data.buffer),
+      write = (at, text) =>
+        [...text].forEach((c, i) => (data[at + i] = c.charCodeAt(0)));
+    write(0, "RIFF");
+    view.setUint32(4, data.length - 8, true);
+    write(8, "WAVEfmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, 8000, true);
+    view.setUint32(28, 16000, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    write(36, "data");
+    view.setUint32(40, 1600, true);
+    return asAudioUpload(
+      new File([data], "SIMULATION.wav", { type: "audio/wav" }),
+      G.getState().project.shots.find((s) => s.id === shotId),
+      index,
+    );
+  }
+
   const p = G.getState().project,
     projectId = Kl.getState().activeId,
     shot = p.shots.find((s) => s.id === shotId),
@@ -1298,8 +1419,9 @@ async function asAudioAll() {
               reason: e.message,
             });
           else
-            await new Promise((r) =>
-              setTimeout(r, Math.min(30000, 1000 * 2 ** attempt)),
+            await asPipelineDelay(
+              Math.min(30000, 1000 * 2 ** attempt),
+              asBatch.controller.signal,
             );
         }
       }

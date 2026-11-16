@@ -33,6 +33,12 @@ async function session(t) {
   p.on("pageerror", (e) => errors.push(e.message));
   t.after(() => assert.deepEqual(errors, []));
   await p.goto(base + "#/auto-produce");
+  await p
+    .getByRole("button", {
+      name: "Open take review / audio / QC / existing production controls",
+      exact: true,
+    })
+    .click();
   await p.waitForFunction(
     () =>
       window.__pipeline?.G.getState().hydrated &&
@@ -240,6 +246,8 @@ test(
           ...s,
           id: "shot" + i,
           sceneId: scene.id,
+          imagePrompt: "Blue keyframe fixture",
+          videoPrompt: "A blue static test clip",
           duration: 0.5,
           order: 1,
           dialogue: [],

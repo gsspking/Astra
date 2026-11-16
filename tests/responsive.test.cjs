@@ -24,7 +24,7 @@ async function noOuterOverflow(page){
 test('every workspace fits phone, tablet and desktop widths without outer horizontal scrolling',async t=>{
   for(const width of [320,390,600,768,820,1024,1440]){
     const page=await pageFor(t,width);
-    for(const route of ['/','/projects','/setup','/skills','/connections','/script','/breakup','/project','/assembly','/control','/io','/pdf','/settings','/prd']){
+    for(const route of ['/','/projects','/setup','/skills','/connections','/script','/breakup','/project','/assembly','/control','/auto-produce','/diagnostics','/io','/pdf','/settings','/prd']){
       await page.goto(base+'#'+route);await page.waitForFunction(()=>document.querySelector('.astra-workspace').dataset.workspace===(location.hash.slice(2)||'home'));
       await noOuterOverflow(page);
     }

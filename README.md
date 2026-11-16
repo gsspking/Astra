@@ -47,3 +47,9 @@ Generation jobs capture the originating project, target inputs, provider job ID 
 Auto-Produce provides planning, take review, continuity frames, dialogue audio, QC/post-processing, animatic/revision tools and a final delivery checklist. Settings → Export & Delivery selects the output folder or ZIP fallback; Settings → Job recovery reconnects to persisted ComfyUI prompts. Configure provider workflows and audio adapters in Connections before running production.
 
 The runtime remains the self-contained `index.html`. Read [DELIVERY_PROGRESS.md](DELIVERY_PROGRESS.md) for phase-by-phase behavior, configuration, tests and validation limits. The production schema is [project_schema_v3.json](project_schema_v3.json); legacy v1/v2 files remain importable. After editing extension source files, run `python3 scripts/embed-delivery.py`.
+
+## Local LLM and single-GPU pipeline
+
+The Pipeline page adds Full-auto, Guided and Manual orchestration, explicit Simulation, checkpointed per-scene LLM analysis, GPU handoffs, overnight controls, prompt lint and Diagnostics. Connections contains advanced provider settings; Settings → Hardware configures the shared GPU and output-drive estimate. Script analysis now requires an active LLM or an explicit **Analyze offline** choice, and LLM results are reviewed before merging.
+
+Read [PIPELINE_V4.md](PIPELINE_V4.md) for the seven implementation phases, configuration, test steps and validation limits. [project_schema_v4.json](project_schema_v4.json) adds pipeline state and skill roles while retaining legacy imports.

@@ -66,12 +66,12 @@ test('FDX imports as a professionally aligned screenplay with original scene lab
 });
 
 test('breakdown and shot exports preserve 1A/1B labels independently from numeric raw counts',async t=>{
-  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze offline',exact:true}).click();
   await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
   const project=await page.evaluate(()=>window.__astra.G.getState().project);
   assert.deepEqual(project.scenes.map(s=>s.scriptNumber),scriptLabels);assert.deepEqual(project.scenes.map(s=>s.number),[1,2,3,4,5,6,7,8]);
   const beforeIds=project.shots.map(s=>s.id);
-  const past=await page.evaluate(()=>window.__astra.G.getState().past.length);await page.getByRole('button',{name:'Analyze',exact:true}).click();
+  const past=await page.evaluate(()=>window.__astra.G.getState().past.length);await page.getByRole('button',{name:'Analyze offline',exact:true}).click();
   await page.waitForFunction(count=>window.__astra.G.getState().past.length>count,past);
   assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id)),beforeIds);
   const links=await page.evaluate(()=>{
@@ -102,35 +102,26 @@ test('Fountain scene markers and prefixed labels parse without treating transiti
 });
 
 test('removed scenes stay outside active script counts and their production work returns when reintroduced',async t=>{
-  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze offline',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
   const shots=await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id).sort());
   await page.getByRole('button',{name:'Edit source',exact:true}).click();await page.getByRole('textbox',{name:'Screenplay source'}).fill('INT. TEA STALL - NIGHT #1#\n\nOne remaining scene.');
-  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===1);
+  await page.getByRole('button',{name:'Analyze offline',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===1);
   assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),['1']);
   assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.archivedScenes.length),7);
   assert.deepEqual(await page.evaluate(()=>{const p=window.__astra.G.getState().project;return [...p.shots,...p.archivedShots].map(s=>s.id).sort()}),shots);
   assert.equal(await page.getByRole('heading',{name:'Retained production scenes'}).count(),1);
   await page.locator('main input[type=file]').setInputFiles(path.join(__dirname,'fixtures','numbered-screenplay.fdx'));
-  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
+  await page.getByRole('button',{name:'Analyze offline',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
   assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.shots.map(s=>s.id).sort()),shots);
   assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.archivedScenes.length),0);
 });
 
-test('LLM analysis uses authoritative script scene labels even when model IDs and numbers change',async t=>{
-  const page=await session(t);await importNumberedScript(page);
-  const response=await page.evaluate(()=>{
-    const a=window.__astra,p=a.sl(a.G.getState().project);
-    p.scenes=p.scenes.map((scene,index)=>({...scene,number:index+101,scriptNumber:'MODEL-'+index}));
-    return JSON.stringify(p);
-  });
-  await page.route('https://numbered-llm.test/chat/completions',route=>route.fulfill({json:{choices:[{message:{content:response}}]}}));
-  await page.evaluate(()=>window.__astra.K.getState().update({llm:[{id:'numbered',kind:'openai',name:'test',baseUrl:'https://numbered-llm.test',model:'test',apiKey:''}],activeLlmId:'numbered'}));
-  await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);
-  assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),scriptLabels);
+test('per-scene LLM analysis preserves authoritative script labels and awaits review',async t=>{
+ const page=await session(t);await importNumberedScript(page);await page.evaluate(()=>window.__astra.K.getState().update({simulation:{enabled:true,latencyMs:0},llm:[{id:'numbered',kind:'simulation',model:'simulation',contextWindow:32768,maxOutputTokens:2048}],activeLlmId:'numbered'}));await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>document.body.innerText.includes('Analysis checkpoint ready'));await page.goto(base+'#/auto-produce');await page.getByRole('button',{name:'Accept all analysis',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.scenes.length===8);assert.deepEqual(await page.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),scriptLabels);
 });
 
 test('storyboard shot labels stay above the frame for below, right and hidden captions',async t=>{
-  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.shots.length>0);
+  const page=await session(t);await importNumberedScript(page);await page.getByRole('button',{name:'Analyze offline',exact:true}).click();await page.waitForFunction(()=>window.__astra.G.getState().project.shots.length>0);
   await page.goto(base+'#/pdf');
   const caption=page.locator('main aside').getByText('Caption',{exact:true}).locator('..').locator('select');
   for(const mode of ['below','right','none']){
@@ -250,7 +241,7 @@ test('offline and LLM reanalysis preserve edits, approved media and removed scen
     return {preserved:next.shots.filter(s=>p.shots.some(old=>old.id===s.id)),initial:JSON.parse(initial),scenes:next.scenes.length,oldIdsPresent:oldIds.every(id=>next.scenes.some(s=>s.id===id)),repeat:JSON.stringify(next)===JSON.stringify(repeat),aiPreserved:JSON.stringify(ai.shots)===initial,removedRetained:oldIds.every(id=>[...removed.scenes,...removed.archivedScenes].some(s=>s.id===id))};
   });
   assert.deepEqual(result.preserved,result.initial);assert.equal(result.scenes,3);assert.equal(result.oldIdsPresent,true);assert.equal(result.repeat,true);assert.equal(result.aiPreserved,true);assert.equal(result.removedRetained,true);
-  await page.goto(base+'#/script');await page.getByRole('button',{name:'Analyze',exact:true}).click();
+  await page.goto(base+'#/script');await page.getByRole('button',{name:'Analyze offline',exact:true}).click();
   await page.waitForFunction(()=>document.body.innerText.includes('Existing')||document.body.innerText.includes('2 scenes · 6 shots · 2 characters'));
 });
 

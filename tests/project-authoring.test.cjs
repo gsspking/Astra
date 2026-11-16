@@ -79,7 +79,7 @@ test('v2 migration preserves v1 content and rejects broken cinematic relationshi
  const page=await session(t);const result=await page.evaluate(p=>{const a=window.__author;p.schemaVersion=1;delete p.vision;delete p.lookBible;delete p.sequences;delete p.continuityEvents;delete p.modelProfiles;for(const s of p.shots){s.sequenceId='';s.modelOverrides=[];for(const kind of ['image','video'])for(const v of s[kind].versions)delete v.modelProfileId;}for(const s of p.scenes)s.sequenceId='';const parsed=a.Uc.parse(p),review=a.mv(parsed);return{version:parsed.schemaVersion,title:parsed.meta.title,durations:parsed.shots.map(s=>s.duration),vision:parsed.vision,errors:review.errors};},example);
  assert.equal(result.version,2);assert.equal(result.title,example.meta.title);assert.deepEqual(result.durations,example.shots.map(s=>s.duration));assert.equal(result.vision.statement,'');assert.deepEqual(result.errors,[]);
  for(const [field,value]of [['sequenceId','missing_sequence'],['modelOverrides',[{modelProfileId:'missing_profile'}]],['referenceSelections',[{assetId:'missing_asset'}]],['captureFps',-1]]){const p=structuredClone(example);p.shots[0][field]=value;assert.ok((await page.evaluate(p=>window.__author.mv(p).errors,p)).length>0,field);}
- const p=structuredClone(example);p.schemaVersion=4;assert.ok((await page.evaluate(p=>window.__author.mv(p).errors,p)).length>0);
+ const p=structuredClone(example);p.schemaVersion=5;assert.ok((await page.evaluate(p=>window.__author.mv(p).errors,p)).length>0);
 });
 
 test('cinematic planning edits and protected identity blocks persist through export',async t=>{
