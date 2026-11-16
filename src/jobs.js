@@ -1,16 +1,34 @@
 /* Durable monitoring records contain no API credentials. Connections retain their existing vault. */
-let asJobJournal = Promise.resolve();
+let asJobJournal = null,
+  asJobSaveRequested = 0,
+  asJobSaveCommitted = 0;
 function asSaveJobs() {
-  const jobs = K.getState().jobs.map((job) => ({ ...job }));
-  const write = asJobJournal
-    .catch(() => {})
-    .then(() => {
-      if (_l() && !vl())
-        throw Error("Unlock the local vault before running jobs");
-      return Vl.setItem("astra-job-journal", JSON.stringify(jobs));
-    });
-  asJobJournal = write;
-  return write;
+  asJobSaveRequested++;
+  if (!asJobJournal) {
+    let failed = false;
+    asJobJournal = (async () => {
+      while (asJobSaveCommitted < asJobSaveRequested) {
+        const revision = asJobSaveRequested;
+        if (_l() && !vl())
+          throw Error("Unlock the local vault before running jobs");
+        await Vl.setItem(
+          "astra-job-journal",
+          JSON.stringify(K.getState().jobs),
+        );
+        asJobSaveCommitted = revision;
+      }
+    })()
+      .catch((error) => {
+        failed = true;
+        throw error;
+      })
+      .finally(() => {
+        asJobJournal = null;
+        if (!failed && asJobSaveCommitted < asJobSaveRequested)
+          return asSaveJobs();
+      });
+  }
+  return asJobJournal;
 }
 async function asResumeJob(id) {
   const job = K.getState().jobs.find((j) => j.id === id);

@@ -769,8 +769,9 @@ async function asAnalysisCheckpoint(original, candidate, errors, metadata) {
     ...metadata,
     createdAt: Date.now(),
   });
+  asPipelineRuntime.reviewProjectId = Kl.getState().activeId;
+  asPipelineRuntime.reviewAvailable = true;
   asPipelineRuntime.review = {
-    original,
     candidate,
     errors,
     scriptHash: await asFingerprint(original.script),
@@ -963,4 +964,15 @@ function asAnalysisMerge(original, incoming) {
         : asset;
     });
   return merged;
+}
+
+async function asAnalysisLoadReview() {
+  const id = Kl.getState().activeId,
+    saved = await Wo("astra-analysis-review:" + id);
+  if (Kl.getState().activeId !== id)
+    throw Error("Project changed while loading review");
+  if (!saved) throw Error("No saved analysis review");
+  asPipelineRuntime.review = { ...saved, candidate: saved.candidate };
+  asPipelineRuntime.reviewProjectId = id;
+  asPipelineNotify();
 }

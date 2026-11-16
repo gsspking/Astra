@@ -51,12 +51,17 @@ async function asPipelineSave(change) {
       }
       asPipelineRuntime.applying = true;
       try {
-        G.getState().set((p) => ({
-          ...p,
-          schemaVersion: 4,
-          skills: p.skills.map((s) => ({ ...s, roles: asRoles(s) })),
-          pipeline: change(asPipelineData(p)),
-        }));
+        const current = G.getState().project;
+        G.setState({
+          project: ((p) => ({
+            ...p,
+            schemaVersion: 4,
+            skills: p.skills.some((s) => !Array.isArray(s.roles))
+              ? p.skills.map((s) => ({ ...s, roles: asRoles(s) }))
+              : p.skills,
+            pipeline: change(asPipelineData(p)),
+          }))(current),
+        });
         await asPersistProject(
           "filmforge-project",
           JSON.stringify({
@@ -953,12 +958,16 @@ async function asPipelineInit() {
   const restore = async () => {
     const id = Kl.getState().activeId;
     if (!id) return;
-    const saved = await Wo("astra-analysis-review:" + id);
-    if (saved && !asPipelineRuntime.active)
-      asPipelineRuntime.review = {
-        ...saved,
-        candidate: await asMediaHydrate(saved.candidate),
-      };
+    // Check existence without deserializing a second full project on every launch.
+    asPipelineRuntime.reviewAvailable = !!(await Uo()("readonly", (store) =>
+      Bo(store.getKey("astra-analysis-review:" + id)),
+    ));
+    if (asPipelineRuntime.reviewProjectId !== id) {
+      asPipelineRuntime.review = null;
+      asPipelineRuntime.passResults = null;
+      asPipelineRuntime.preview = null;
+      asPipelineRuntime.reviewProjectId = id;
+    }
     const stages = asPipelineData().stages;
     if (Object.values(stages).some((s) => s.status === "running"))
       await asPipelineSave((d) => ({
@@ -1001,16 +1010,24 @@ async function asPipelineInit() {
       next.project.pipeline !== previous.project.pipeline
     )
       return;
-    const changed = next.project.shots.filter((s) => {
-      const old = previous.project.shots.find((v) => v.id === s.id);
-      return old && asTargetRevision(old) !== asTargetRevision(s);
-    });
+    const previousShots = new Map(previous.project.shots.map((s) => [s.id, s]));
+    const changed =
+      next.project.shots === previous.project.shots
+        ? []
+        : next.project.shots.filter((s) => {
+            const old = previousShots.get(s.id);
+            return (
+              old && old !== s && asTargetRevision(old) !== asTargetRevision(s)
+            );
+          });
     const assets = ["characters", "environments", "props", "costumes"].flatMap(
       (kind) =>
         next.project[kind]
           .filter((a) => {
             const old = previous.project[kind].find((v) => v.id === a.id);
-            return old && asTargetRevision(old) !== asTargetRevision(a);
+            return (
+              old && old !== a && asTargetRevision(old) !== asTargetRevision(a)
+            );
           })
           .map((a) => a.id),
     );

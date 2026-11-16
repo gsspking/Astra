@@ -7,8 +7,26 @@ const asLLMActive = new Map(),
     tokens: 0,
     listeners: new Set(),
   };
-function asLLMNotify() {
-  for (const listener of asLLMView.listeners) listener();
+let asLLMRenderTimer = null;
+function asLLMNotify(force = false) {
+  if (force) {
+    clearTimeout(asLLMRenderTimer);
+    asLLMRenderTimer = null;
+    for (const listener of asLLMView.listeners) listener();
+    return;
+  }
+  if (asLLMRenderTimer === null)
+    asLLMRenderTimer = setTimeout(() => {
+      asLLMRenderTimer = null;
+      for (const listener of asLLMView.listeners) listener();
+    }, 100);
+}
+const asLLMPreviewLimit = 48000;
+function asLLMPreview(text) {
+  return text.length > asLLMPreviewLimit
+    ? "[Live preview shows the last 48,000 characters; the complete bounded response is retained for validation.]\n" +
+        text.slice(-asLLMPreviewLimit)
+    : text;
 }
 function asLLMProfile(profile) {
   return {
@@ -271,11 +289,19 @@ async function asLLMRequest(raw, system, input, options = {}) {
       const consume = (data) => {
         if (data.error)
           throw Error("LLM provider error: " + asRedact(data.error));
-        text += ollama
+        const delta = ollama
           ? data.message?.content || data.response || ""
           : data.choices?.[0]?.delta?.content ||
             data.choices?.[0]?.message?.content ||
             "";
+        if (
+          text.length + delta.length >
+          Math.min(2000000, Math.max(32768, p.maxOutputTokens * 32))
+        )
+          throw Error(
+            "LLM response exceeded the memory limit. Reduce the pass size or output budget, and check that the server honours max tokens.",
+          );
+        text += delta;
         finish = ollama
           ? data.done_reason || finish
           : data.choices?.[0]?.finish_reason || finish;
@@ -285,7 +311,7 @@ async function asLLMRequest(raw, system, input, options = {}) {
           usage.prompt_tokens = data.prompt_eval_count || usage.prompt_tokens;
           usage.completion_tokens = data.eval_count || usage.completion_tokens;
         } else usage = { ...usage, ...data.usage };
-        asLLMView.text = text;
+        asLLMView.text = asLLMPreview(text);
         asLLMView.tokens = usage.completion_tokens || asEstimateTokens(text, p);
         asLLMView.tps =
           asLLMView.tokens /
@@ -297,7 +323,7 @@ async function asLLMRequest(raw, system, input, options = {}) {
         !p.streaming ||
         response.headers.get("content-type")?.includes("application/json")
       )
-        consume(await response.json());
+        consume(await asLLMReadJSON(response));
       else {
         const reader = response.body.getReader(),
           decoder = new TextDecoder();
@@ -307,6 +333,10 @@ async function asLLMRequest(raw, system, input, options = {}) {
             const { done, value } = await reader.read();
             if (done) break;
             buffer += decoder.decode(value, { stream: true });
+            if (buffer.length > 4000000)
+              throw Error(
+                "LLM stream packet exceeded the memory limit. Check the configured streaming protocol.",
+              );
             let at;
             while ((at = buffer.indexOf("\n")) >= 0) {
               const line = buffer.slice(0, at).trim();
@@ -356,7 +386,7 @@ async function asLLMRequest(raw, system, input, options = {}) {
       ),
     });
     Object.assign(asLLMView, {
-      text,
+      text: asLLMPreview(text),
       status: "Done",
       tps,
       tokens: usage.completion_tokens || asEstimateTokens(text, p),
@@ -380,7 +410,7 @@ async function asLLMRequest(raw, system, input, options = {}) {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", abort);
     asLLMActive.delete(id);
-    asLLMNotify();
+    asLLMNotify(true);
   }
 }
 function asLLMStop() {
@@ -501,4 +531,28 @@ async function asLLMContextProbe(raw) {
     simulation: p.kind === "simulation",
     evidence,
   };
+}
+async function asLLMReadJSON(response) {
+  if (!response.body) return response.json();
+  const reader = response.body.getReader(),
+    decoder = new TextDecoder(),
+    parts = [];
+  let bytes = 0;
+  try {
+    for (;;) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      bytes += chunk.value.byteLength;
+      if (bytes > 8 * 1024 * 1024)
+        throw Error(
+          "LLM response exceeded the memory limit. Reduce output size and check the configured endpoint.",
+        );
+      parts.push(decoder.decode(chunk.value, { stream: true }));
+    }
+    parts.push(decoder.decode());
+    return JSON.parse(parts.join(""));
+  } finally {
+    await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
 }

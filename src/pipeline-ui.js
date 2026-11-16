@@ -820,6 +820,9 @@ function asPipelinePage() {
           asPipelineNotify();
         }),
       ),
+    asPipelineRuntime.reviewAvailable &&
+      !asPipelineRuntime.review &&
+      f.button("Load saved analysis review", asAnalysisLoadReview),
     asPipelineRuntime.review &&
       asEl(
         "section",

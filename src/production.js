@@ -44,14 +44,14 @@ async function asProductionSave(change, label = "production") {
         await asWriteStored("astra-pre-v3-" + id, original);
         G.getState().snapshot("Before production schema v3 migration");
       }
-      G.getState().set(
-        (p) => ({
+      const current = G.getState().project;
+      G.setState({
+        project: ((p) => ({
           ...p,
           schemaVersion: Math.max(3, p.schemaVersion || 3),
           production: change(asProduction(p)),
-        }),
-        label,
-      );
+        }))(current),
+      });
       const state = G.getState();
       await asPersistProject(
         "filmforge-project",
