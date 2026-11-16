@@ -1,3 +1,4 @@
+const {waitForExport}=require('./helpers/export.cjs');
 const {test,before,after}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs/promises');
@@ -83,10 +84,10 @@ test('breakdown and shot exports preserve 1A/1B labels independently from numeri
   assert.deepEqual(links,{labels:['1A','4B'],character:'MEERA',exported:['1A','4B']});
   await page.goto(base+'#/project');
   assert.equal(await page.getByText('SC 1A',{exact:true}).count(),1);
-  let download=page.waitForEvent('download');await page.getByRole('button',{name:'JSON',exact:true}).click();
+  let download=waitForExport(page);await page.getByRole('button',{name:'JSON',exact:true}).click();
   const exported=path.join(root,'test-results','numbered-shots.json');await(await download).saveAs(exported);
   const shots=JSON.parse(await fs.readFile(exported,'utf8'));assert.ok(shots.some(s=>s.scene==='1A'&&s.code.startsWith('S1A-SH')));assert.ok(shots.some(s=>s.scene==='4B'&&s.rawScene===8));
-  await page.goto(base+'#/io');download=page.waitForEvent('download');await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
+  await page.goto(base+'#/io');download=waitForExport(page);await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
   const backup=path.join(root,'test-results','numbered.ffproj.json');await(await download).saveAs(backup);
   const fresh=await session(t);await fresh.goto(base+'#/io');await fresh.locator('input[type=file]').last().setInputFiles(backup);await fresh.getByRole('button',{name:'Apply import',exact:true}).click();
   assert.deepEqual(await fresh.evaluate(()=>window.__astra.G.getState().project.scenes.map(s=>s.scriptNumber)),scriptLabels);
@@ -209,7 +210,7 @@ test('Home banner upload persists per project, supports reset/undo and survives 
   await page.waitForFunction(()=>document.body.innerText.includes('File could not be processed'));
   assert.equal(await banner.getByRole('img').getAttribute('src'),before);
   await page.goto(base+'#/io');
-  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
+  const downloaded=waitForExport(page);await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
   const backupPath=path.join(root,'test-results','banner.ffproj.json');await(await downloaded).saveAs(backupPath);
   const backup=JSON.parse(await fs.readFile(backupPath,'utf8'));assert.equal(backup.meta.bannerImage,image);
   const fresh=await session(t);await fresh.goto(base+'#/io');
@@ -268,7 +269,7 @@ test('media is deduplicated, snapshots stay small and portable backups reopen in
   await page.reload();await page.waitForFunction(()=>window.__astra?.G.getState().hydrated);
   assert.equal(await page.evaluate(()=>window.__astra.G.getState().project.shots[0].image.versions[0].url.startsWith('blob:')),true);
   await page.goto(base+'#/io');
-  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
+  const downloaded=waitForExport(page);await page.getByRole('button',{name:'Download project (.ffproj.json)',exact:true}).click();
   const backup=await downloaded,backupPath=path.join(root,'test-results','portable.ffproj.json');await backup.saveAs(backupPath);
   const backupJSON=JSON.parse(await fs.readFile(backupPath,'utf8'));
   assert.equal(backupJSON.shots[0].image.versions[0].url,image);
@@ -370,7 +371,7 @@ test('WebM contains source audio, respects timing and cleans up cancellation',as
   },data);
   await page.goto(base+'#/assembly');
   assert.equal(await page.locator('main video').count(),1,'blob URL recognized as video');
-  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'WebM review',exact:true}).click();
+  const downloaded=waitForExport(page);await page.getByRole('button',{name:'WebM review',exact:true}).click();
   const output=path.join(root,'test-results','audio-review.webm');await(await downloaded).saveAs(output);
   const info=JSON.parse(execFileSync('ffprobe',['-v','error','-show_streams','-show_format','-of','json',output],{encoding:'utf8'}));
   assert.ok(info.streams.some(s=>s.codec_type==='video'));assert.ok(info.streams.some(s=>s.codec_type==='audio'));
@@ -399,10 +400,9 @@ test('181-second export streams to a file without clipping a long shot',{skip:!p
     window.showSaveFilePicker=async()=>handle;
     window.__longExport=a.asRenderAssembly({project:p,shots:p.shots,signal:new AbortController().signal,onStatus:status=>window.__exportStatus=status});
   },image);
+  const downloaded=waitForExport(page,230000);
   const result=await page.evaluate(()=>window.__longExport);
   assert.equal(result.duration,181);
-  const downloaded=page.waitForEvent('download');
-  await page.evaluate(async()=>{const dir=await navigator.storage.getDirectory(),blob=await(await dir.getFileHandle('long.webm')).getFile(),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='long.webm';a.click()});
   const output=path.join(root,'test-results','long-review.webm');await(await downloaded).saveAs(output);
   const seconds=mediaDuration(output);
   assert.ok(seconds>=180.5&&seconds<184,`actual WebM duration ${seconds}`);

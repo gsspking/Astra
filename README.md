@@ -41,3 +41,9 @@ Cinematic schema v2 adds structured shot/camera/continuity planning, scene drama
 
 
 Generation jobs capture the originating project, target inputs, provider job ID and request seed. Switching projects cannot redirect results. Changed or removed targets retain completed output in the queue for download; Clear finished and media reclamation preserve those recoverable results. Cancellation prevents local attachment and removes only the job’s queued ComfyUI prompt when available; running remote work may continue. The shared-server interrupt endpoint is never used. Rough Cut preview uses planned shot duration, holds a short clip’s last frame, truncates longer clips, and preserves elapsed time when paused. Production Control reports video approvals without claiming an editorial picture lock. Referenced model profiles and sequences cannot be deleted or renamed until their links are cleared.
+
+## Production automation and delivery
+
+Auto-Produce provides planning, take review, continuity frames, dialogue audio, QC/post-processing, animatic/revision tools and a final delivery checklist. Settings → Export & Delivery selects the output folder or ZIP fallback; Settings → Job recovery reconnects to persisted ComfyUI prompts. Configure provider workflows and audio adapters in Connections before running production.
+
+The runtime remains the self-contained `index.html`. Read [DELIVERY_PROGRESS.md](DELIVERY_PROGRESS.md) for phase-by-phase behavior, configuration, tests and validation limits. The production schema is [project_schema_v3.json](project_schema_v3.json); legacy v1/v2 files remain importable. After editing extension source files, run `python3 scripts/embed-delivery.py`.
